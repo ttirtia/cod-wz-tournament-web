@@ -1,12 +1,107 @@
-import Vue from 'vue'
-import App from './App.vue'
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { createProvider } from './vue-apollo'
+import Vue from "vue";
+import Vuex from "vuex";
+import VueRouter from "vue-router";
+import App from "./App.vue";
+import "./index.css";
+import { createProvider } from "./vue-apollo";
+import { onLogout, onLogin, apolloClient } from "@/vue-apollo";
+import { LOGIN_USER } from "@/graphql/mutations";
+import jwt_decode from "jwt-decode";
 
-Vue.config.productionTip = false
+import Home from "./components/Table.vue";
+import Results from "./components/ResultsInput.vue";
+import Login from "./components/Login.vue";
+
+Vue.use(VueRouter);
+Vue.use(Vuex);
+
+Vue.config.productionTip = false;
+
+const routes = [
+  { path: "/", component: Home, name: "home", meta: { requiresAuth: true } },
+  {
+    path: "/results",
+    component: Results,
+    name: "results",
+    meta: { requiresAuth: true },
+  },
+  { path: "/login", component: Login, name: "login" },
+];
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes,
+});
+
+const store = new Vuex.Store({
+  state: {
+    token: null,
+    user: {},
+    authStatus: false,
+  },
+  getters: {
+    isAuthenticated: (state) => !!state.token,
+    authStatus: (state) => state.authStatus,
+    user: (state) => state.user,
+  },
+  mutations: {
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
+    LOGIN_USER(state, user) {
+      state.authStatus = true;
+      state.user = { ...user };
+    },
+    LOGOUT_USER(state) {
+      state.authStatus = "";
+      state.token = "" && localStorage.removeItem("apollo-token");
+    },
+  },
+  actions: {
+    async login({ commit /*, dispatch*/ }, authInfo) {
+      try {
+        const { data } = await apolloClient.mutate({
+          mutation: LOGIN_USER,
+          variables: { ...authInfo },
+        });
+        const token = JSON.stringify(data.login);
+        commit("SET_TOKEN", token);
+        commit("LOGIN_USER", jwt_decode(token));
+        onLogin(apolloClient, token);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async logOut({ commit }) {
+      commit("LOGOUT_USER");
+      onLogout(apolloClient);
+    },
+  },
+});
+
+// Global Route Guards
+router.beforeEach((to, from, next) => {
+  // Check if the user is logged in
+  const isUserLoggedIn = store.getters.isAuthenticated;
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isUserLoggedIn) {
+      store.dispatch("logOut");
+      next({
+        path: "/login",
+        query: { redirect: to.fullPath },
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 new Vue({
   apolloProvider: createProvider(),
-  render: h => h(App)
-}).$mount('#app')
+  router,
+  render: (h) => h(App),
+  store,
+}).$mount("#app");
