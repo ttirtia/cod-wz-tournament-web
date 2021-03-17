@@ -1,17 +1,32 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view />
+    <!-- <Table/> -->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  component: {
+
+  },
+  data () {
+    return {
+
+    }
+  },
+  methods: {
+    logOut: function () {
+      this.$store.dispatch('logOut')
+        .then(() => this.$router.push('/login'))
+    }
+
+  },
+  computed: {
+    ...mapGetters(['authStatus', 'user'])
   }
 }
 </script>
@@ -23,6 +38,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
