@@ -7,6 +7,7 @@ import { createProvider } from "./vue-apollo";
 import { onLogout, onLogin, apolloClient } from "@/vue-apollo";
 import { LOGIN_USER } from "@/graphql/mutations";
 import jwt_decode from "jwt-decode";
+import createPersistedState from "vuex-persistedstate";
 
 import Home from "./components/Table.vue";
 import Results from "./components/ResultsInput.vue";
@@ -35,6 +36,7 @@ const router = new VueRouter({
 });
 
 const store = new Vuex.Store({
+  plugins: [createPersistedState()],
   state: {
     token: null,
     user: {},
@@ -66,15 +68,17 @@ const store = new Vuex.Store({
           variables: { ...authInfo },
         });
         const token = JSON.stringify(data.login);
-        commit("SET_TOKEN", token);
-        commit("LOGIN_USER", jwt_decode(token));
+        await Promise.all([
+          commit("SET_TOKEN", token),
+          commit("LOGIN_USER", jwt_decode(token))
+        ]);
         onLogin(apolloClient, token);
       } catch (e) {
         console.log(e);
       }
     },
     async logOut({ commit }) {
-      commit("LOGOUT_USER");
+      await commit("LOGOUT_USER");
       onLogout(apolloClient);
     },
   },
