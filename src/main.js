@@ -9,7 +9,8 @@ import { LOGIN_USER } from "@/graphql/mutations";
 import jwt_decode from "jwt-decode";
 import createPersistedState from "vuex-persistedstate";
 
-import Home from "./components/Table.vue";
+import Table from "./components/Table.vue";
+import Home from "./components/Tournaments.vue";
 import Results from "./components/ResultsInput.vue";
 import Login from "./components/Login.vue";
 
@@ -20,6 +21,7 @@ Vue.config.productionTip = false;
 
 const routes = [
   { path: "/", component: Home, name: "home", meta: { requiresAuth: true } },
+  { path: "/table/:id", props: true ,component: Table, name: "table", meta: { requiresAuth: true } },
   {
     path: "/results",
     component: Results,
@@ -52,11 +54,13 @@ const store = new Vuex.Store({
       state.token = token;
     },
     LOGIN_USER(state, user) {
+      state.isAuthenticated = true;
       state.authStatus = true;
       state.user = { ...user };
     },
     LOGOUT_USER(state) {
       state.authStatus = "";
+      state.isAuthenticated = false;
       state.token = "" && localStorage.removeItem("apollo-token");
     },
   },
