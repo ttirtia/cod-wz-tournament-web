@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import VueRouter from "vue-router";
+import VueCookies from "vue-cookies";
 import App from "./App.vue";
 import "./index.css";
 import { createProvider } from "./vue-apollo";
@@ -13,22 +14,48 @@ import Table from "./components/Table.vue";
 import Home from "./components/Tournaments.vue";
 import Results from "./components/ResultsInput.vue";
 import Login from "./components/Login.vue";
+import Register from "./components/Register.vue";
+import Administration from "./components/Administration.vue";
+import { FIND_PLAYERS, FIND_USERS, FIND_INVITATIONS } from "./graphql/queries";
+import {
+  CREATE_PLAYER,
+  DELETE_PLAYER,
+  CREATE_USER,
+  DELETE_USER,
+  UPDATE_USER,
+  CREATE_INVITATION,
+  DELETE_INVITATION,
+} from "./graphql/mutations";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueCookies);
 
 Vue.config.productionTip = false;
 
 const routes = [
   { path: "/", component: Home, name: "home", meta: { requiresAuth: true } },
-  { path: "/table/:id", props: true ,component: Table, name: "table", meta: { requiresAuth: true } },
+  {
+    path: "/table/:id",
+    props: true,
+    component: Table,
+    name: "table",
+    meta: { requiresAuth: true },
+  },
   {
     path: "/results",
     component: Results,
     name: "results",
     meta: { requiresAuth: true },
   },
+  {
+    path: "/admin",
+    component: Administration,
+    name: "admin",
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
   { path: "/login", component: Login, name: "login" },
+  { path: "/register", component: Register, name: "register" },
 ];
 
 const router = new VueRouter({
@@ -51,7 +78,16 @@ const store = new Vuex.Store({
   },
   mutations: {
     SET_TOKEN(state, token) {
-      state.token = token;
+      state.token = JSON.parse(token);
+      Vue.$cookies.set(
+        "token",
+        JSON.parse(token),
+        null,
+        null,
+        null,
+        null,
+        "Strict"
+      );
     },
     LOGIN_USER(state, user) {
       state.isAuthenticated = true;
@@ -61,7 +97,8 @@ const store = new Vuex.Store({
     LOGOUT_USER(state) {
       state.authStatus = "";
       state.isAuthenticated = false;
-      state.token = "" && localStorage.removeItem("apollo-token");
+      state.token = "";
+      Vue.$cookies.remove("token");
     },
   },
   actions: {
@@ -74,7 +111,7 @@ const store = new Vuex.Store({
         const token = JSON.stringify(data.login);
         await Promise.all([
           commit("SET_TOKEN", token),
-          commit("LOGIN_USER", jwt_decode(token))
+          commit("LOGIN_USER", jwt_decode(token)),
         ]);
         onLogin(apolloClient, token);
       } catch (e) {
@@ -85,6 +122,112 @@ const store = new Vuex.Store({
       await commit("LOGOUT_USER");
       onLogout(apolloClient);
     },
+    async apiCreateUser(_, { invitationId, userInfo }) {
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_USER,
+        variables: {
+          invitationId,
+          user: {
+            username: userInfo.username,
+            password: userInfo.password,
+          },
+        },
+      });
+
+      return data;
+    },
+    async apiDeleteUser(_, userId) {
+      const { data } = await apolloClient.mutate({
+        mutation: DELETE_USER,
+        variables: {
+          id: userId,
+        },
+      });
+
+      return data;
+    },
+    async apiFindPlayers(_, filter) {
+      const { data } = await apolloClient.query({
+        query: FIND_PLAYERS,
+        variables: {
+          filter,
+        },
+        fetchPolicy: "network-only",
+      });
+
+      return data;
+    },
+    async apiCreatePlayer(_, playerName) {
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_PLAYER,
+        variables: {
+          name: playerName,
+        },
+      });
+
+      return data;
+    },
+    async apiDeletePlayer(_, playerId) {
+      const { data } = await apolloClient.mutate({
+        mutation: DELETE_PLAYER,
+        variables: {
+          id: playerId,
+        },
+      });
+
+      return data;
+    },
+    async apiFindUsers(_, filter) {
+      const { data } = await apolloClient.query({
+        query: FIND_USERS,
+        variables: {
+          filter,
+        },
+        fetchPolicy: "network-only",
+      });
+
+      return data;
+    },
+    async apiUpdateUser(_, { id, user }) {
+      const { data } = await apolloClient.mutate({
+        mutation: UPDATE_USER,
+        variables: {
+          id,
+          user,
+        },
+      });
+
+      return data;
+    },
+    async apiFindInvitations() {
+      const { data } = await apolloClient.query({
+        query: FIND_INVITATIONS,
+        fetchPolicy: "network-only",
+      });
+
+      return data;
+    },
+    async apiCreateInvitation(_, { player, isAdmin }) {
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_INVITATION,
+        variables: {
+          player,
+          isAdmin,
+        },
+      });
+
+      return data;
+    },
+    async apiDeleteInvitation(_, id) {
+      const { data } = await apolloClient.mutate({
+        mutation: DELETE_INVITATION,
+        variables: {
+          id,
+        },
+      });
+
+      return data;
+    },
   },
 });
 
@@ -92,6 +235,7 @@ const store = new Vuex.Store({
 router.beforeEach((to, from, next) => {
   // Check if the user is logged in
   const isUserLoggedIn = store.getters.isAuthenticated;
+  const isUserAdmin = store.getters.user.isAdmin;
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isUserLoggedIn) {
       store.dispatch("logOut");
@@ -101,6 +245,14 @@ router.beforeEach((to, from, next) => {
       });
     } else {
       next();
+    }
+  } else if (to.matched.some((record) => record.meta.requiresAdmin)) {
+    if (!isUserAdmin) {
+      // TODO: Show a beautiful page telling users they can't be here
+      next({
+        path: "/",
+        query: { redirect: to.fullPath },
+      });
     }
   } else {
     next();
