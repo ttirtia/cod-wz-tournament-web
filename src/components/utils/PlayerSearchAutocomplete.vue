@@ -5,11 +5,11 @@
       @input="onChange"
       v-model="search"
       placeholder="Search for a player..."
-      class="rounded-md border-gray-400 border focus:outline-none pl-2 py-1"
+      class="border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-md pl-2 py-1"
     />
     <ul
       v-show="isOpen"
-      class="border border-t-0 border-gray-400 rounded-md bg-white overflow-auto h-28"
+      class="border border-t-0 border-gray-300 rounded-md bg-white overflow-auto h-28"
     >
       <li class="loading" v-if="isLoading">Loading results...</li>
       <li

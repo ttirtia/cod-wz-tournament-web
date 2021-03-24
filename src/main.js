@@ -16,10 +16,19 @@ import Results from "./components/ResultsInput.vue";
 import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Administration from "./components/Administration.vue";
-import { FIND_PLAYERS, FIND_USERS, FIND_INVITATIONS } from "./graphql/queries";
+import AdminTournament from "./components/admin/Tournament.vue";
+import AdminTeam from "./components/admin/Team.vue";
+import { FIND_PLAYERS, FIND_TOURNAMENTS, FIND_TEAMS, FIND_USERS, FIND_INVITATIONS } from "./graphql/queries";
 import {
   CREATE_PLAYER,
   DELETE_PLAYER,
+  CREATE_TOURNAMENT,
+  DELETE_TOURNAMENT,
+  UPDATE_TOURNAMENT,
+  CREATE_TEAM,
+  UPDATE_TEAM,
+  DELETE_TEAM,
+  UPDATE_GAME,
   CREATE_USER,
   DELETE_USER,
   UPDATE_USER,
@@ -50,8 +59,26 @@ const routes = [
   },
   {
     path: "/admin",
+    redirect: "/admin/players",
+    name: "adminRedirect",
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/:view",
     component: Administration,
     name: "admin",
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/tournaments/:id",
+    component: AdminTournament,
+    name: "adminTournament",
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/teams/:id",
+    component: AdminTeam,
+    name: "adminTeam",
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   { path: "/login", component: Login, name: "login" },
@@ -122,15 +149,108 @@ const store = new Vuex.Store({
       await commit("LOGOUT_USER");
       onLogout(apolloClient);
     },
-    async apiCreateUser(_, { invitationId, userInfo }) {
+    async apiFindTournaments(_, { filter, teamOrder }) {
+      const { data } = await apolloClient.query({
+        query: FIND_TOURNAMENTS,
+        variables: {
+          filter,
+          teamOrder,
+        },
+        fetchPolicy: "network-only",
+      });
+
+      return data;
+    },
+    async apiCreateTournament(_, tournament) {
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_TOURNAMENT,
+        variables: {
+          tournament,
+        },
+      });
+
+      return data;
+    },
+    async apiDeleteTournament(_, tournamentId) {
+      const { data } = await apolloClient.mutate({
+        mutation: DELETE_TOURNAMENT,
+        variables: {
+          id: tournamentId,
+        },
+      });
+
+      return data;
+    },
+    async apiUpdateTournament(_, { id, tournament }) {
+      const { data } = await apolloClient.mutate({
+        mutation: UPDATE_TOURNAMENT,
+        variables: {
+          id,
+          tournament,
+        },
+      });
+
+      return data;
+    },
+    async apiFindTeams(_, filter) {
+      const { data } = await apolloClient.query({
+        query: FIND_TEAMS,
+        variables: {
+          filter,
+        },
+        fetchPolicy: "network-only",
+      });
+
+      return data;
+    },
+    async apiCreateTeam(_, team) {
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_TEAM,
+        variables: {
+          team,
+        },
+      });
+
+      return data;
+    },
+    async apiUpdateTeam(_, { id, team }) {
+      const { data } = await apolloClient.mutate({
+        mutation: UPDATE_TEAM,
+        variables: {
+          id,
+          team,
+        },
+      });
+
+      return data;
+    },
+    async apiDeleteTeam(_, teamId) {
+      const { data } = await apolloClient.mutate({
+        mutation: DELETE_TEAM,
+        variables: {
+          id: teamId,
+        },
+      });
+
+      return data;
+    },
+    async apiUpdateGame(_, { id, game }) {
+      const { data } = await apolloClient.mutate({
+        mutation: UPDATE_GAME,
+        variables: {
+          id,
+          game,
+        },
+      });
+
+      return data;
+    },
+    async apiCreateUser(_, { invitationId, user }) {
       const { data } = await apolloClient.mutate({
         mutation: CREATE_USER,
         variables: {
           invitationId,
-          user: {
-            username: userInfo.username,
-            password: userInfo.password,
-          },
+          user,
         },
       });
 

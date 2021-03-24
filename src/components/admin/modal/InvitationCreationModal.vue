@@ -2,8 +2,7 @@
   <transition name="modal-fade">
     <div class="modal-backdrop">
       <div
-        class="p-4 h-64 bg-white rounded-md border border-gray-200"
-        style="width: 32rem"
+        class="p-4 bg-white rounded-md border border-gray-200"
       >
         <div
           class="flex flex-grow flex-row items-center mx-2 pb-2 mb-4 border-b border-gray-300"
