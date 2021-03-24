@@ -7,7 +7,9 @@
         <div
           class="flex flex-grow flex-row items-center mx-2 pb-2 mb-4 border-b border-gray-300"
         >
-          <p class="text-lg font-semibold flex-grow text-left">New player</p>
+          <p class="text-lg font-semibold flex-grow text-left truncate">
+            Add a player to {{ teamName }}
+          </p>
           <button @click="close" class="focus:outline-none">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -27,20 +29,27 @@
         </div>
 
         <div class="flex flex-col h-full mx-2">
-          <div class="flex flex-col mb-8">
-            <label for="playerName" class="text-sm text-left mb-2">Name</label>
-            <input
-              v-model="newPlayerInfo.name"
-              id="playerName"
-              name="playerName"
-              required
-              class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-              placeholder="Thierry"
-            />
+          <div class="space-y-4 mb-10">
+            <div class="flex flex-col mb-4">
+              <label for="playerName" class="text-sm text-left mb-2"
+                >Player</label
+              >
+              <PlayerSearchAutocomplete ref="playerSearchAutocomplete" @setPlayer="setPlayer" class="mt-6 absolute" />
+            </div>
           </div>
           <div class="flex flex-row justify-center space-x-4">
-            <button @click="save" class="bg-green-400 text-white rounded-md p-1.5 w-36 focus:outline-none">Save</button>
-            <button @click="close" class="border-2 border-gray-300 rounded-md p-1.5 w-36 focus:outline-none">Cancel</button>
+            <button
+              @click="save"
+              class="bg-green-400 text-white rounded-md p-1.5 w-36 focus:outline-none"
+            >
+              Save
+            </button>
+            <button
+              @click="close"
+              class="border-2 border-gray-300 rounded-md p-1.5 w-36 focus:outline-none"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
@@ -49,21 +58,30 @@
 </template>
 
 <script>
+import PlayerSearchAutocomplete from "../../utils/PlayerSearchAutocomplete";
+
 export default {
-  name: "PlayerCreationModal",
+  name: "TeamUserAddModal",
+  components: {
+    PlayerSearchAutocomplete,
+  },
+  props: ["teamName"],
   data() {
     return {
-      newPlayerInfo: {},
+      playerToAdd: null,
     };
   },
   methods: {
     close() {
-      this.newPlayerInfo = {};
-      this.$emit("close");
+      this.playerToAdd = null;
+      this.$emit('close');
     },
     save() {
-      this.$emit("save");
+      this.$emit("save", this.playerToAdd);
     },
+    setPlayer(player) {
+      this.playerToAdd = player.id;
+    }
   },
 };
 </script>

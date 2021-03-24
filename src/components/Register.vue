@@ -99,7 +99,7 @@ export default {
     createUser: function () {
       this.apiCreateUser({
         invitationId: this.$route.query.id,
-        userInfo: this.userInfo,
+        user: this.userInfo,
       }).then(() =>
         this.login(this.userInfo).then(() =>
           this.$router.push("/").catch(() => {})

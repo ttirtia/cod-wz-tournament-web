@@ -34,6 +34,28 @@ export const DELETE_PLAYER = gql`
   }
 `;
 
+export const CREATE_TOURNAMENT = gql`
+  mutation createTournament($tournament: CreateTournamentInput!) {
+    createTournament(tournament: $tournament) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_TOURNAMENT = gql`
+  mutation updateTournament($id: ID!, $tournament: UpdateTournamentInput!) {
+    updateTournament(id: $id, tournament: $tournament) {
+      id
+    }
+  }
+`;
+
+export const DELETE_TOURNAMENT = gql`
+  mutation deleteTournament($id: ID!) {
+    deleteTournament(id: $id)
+  }
+`;
+
 export const UPDATE_USER = gql`
   mutation updateUser($id: ID!, $user: UpdateUserInput!) {
     updateUser(id: $id, user: $user) {
@@ -53,5 +75,35 @@ export const CREATE_INVITATION = gql`
 export const DELETE_INVITATION = gql`
   mutation deleteInvitation($id: ID!) {
     deleteInvitation(id: $id)
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation createTeam($team: CreateTeamInput!) {
+    createTeam(team: $team) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_TEAM = gql`
+  mutation updateTeam($id: ID!, $team: UpdateTeamInput!) {
+    updateTeam(id: $id, team: $team) {
+      id
+    }
+  }
+`;
+
+export const DELETE_TEAM = gql`
+  mutation deleteTeam($id: ID!) {
+    deleteTeam(id: $id)
+  }
+`;
+
+export const UPDATE_GAME = gql`
+  mutation updateGame($id: ID!, $game: UpdateGameInput!) {
+    updateGame(id: $id, game: $game) {
+      id
+    }
   }
 `;
