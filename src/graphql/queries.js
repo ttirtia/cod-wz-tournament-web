@@ -30,6 +30,9 @@ export const FIND_TOURNAMENTS = gql`
           id
           name
         }
+        teamLeader {
+          id
+        }
       }
     }
   }

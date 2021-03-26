@@ -1,47 +1,53 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
+
 <template>
   <layout-default>
     <div>
       <header class="bg-white shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 class="text-3xl font-bold text-gray-900">Tournament table</h1>
+          <h1 class="text-3xl font-bold text-gray-900">
+            {{ tournament.name }}
+          </h1>
         </div>
       </header>
       <main>
-        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <!-- Replace with your content -->
-          <div class="px-4 py-6 sm:px-0">
+        <div
+          class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"
+        >
+          <div class="sm:px-0">
             <div class="h-96">
-              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="tournament.teams.length > 0">
+                <h2 class="text-xl font-bold text-gray-900 text-left mb-4">
+                  Classement général
+                </h2>
                 <table class="border-collapse w-full">
                   <thead>
                     <tr>
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
                       >
-                        Position
+                        {{ $tc("position", 1) }}
                       </th>
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
                       >
-                        Team
+                        {{ $tc("team", 1) }}
                       </th>
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
                       >
-                        Players
+                        {{ $tc("player", 2) }}
                       </th>
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
                       >
-                        Points
+                        {{ $tc("point", 2) }}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr
-                      v-for="object in teams"
-                      v-bind:key="object"
+                      v-for="team in tournament.teams"
+                      v-bind:key="team.id"
                       class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
                     >
                       <td
@@ -49,19 +55,19 @@
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase font-bold"
-                          >Position</span
+                          >{{ $tc("position", 1) }}</span
                         >
                         <span
                           v-bind:class="[
-                            object.position == 1
+                            team.position == 1
                               ? 'rounded bg-gold py-1 px-3 text-md font-bold'
-                              : object.position == 2
+                              : team.position == 2
                               ? 'rounded bg-silver py-1 px-3 text-md font-bold'
-                              : object.position == 3
+                              : team.position == 3
                               ? 'rounded bg-bronze py-1 px-3 text-md font-bold'
                               : 'rounded py-1 px-3 text-md font-bold',
                           ]"
-                          >{{ object.position }}</span
+                          >{{ team.placement ? team.placement : "N/A" }}</span
                         >
                       </td>
                       <td
@@ -69,25 +75,32 @@
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                          >Team</span
+                          >{{ $tc("team", 1) }}</span
                         >
-                        {{ object.name }}
+                        {{ team.name }}
                       </td>
                       <td
                         class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        style="vertical-align: middle"
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                          >Players</span
+                          >{{ $tc("player", 1) }}</span
                         >
-                        <span
-                          v-for="(member, index) in object.members"
-                          :key="index"
-                        >
-                          {{ member.name
-                          }}<span v-if="index != object.members.length - 1"
+                        <span v-for="player in team.players" :key="player.id">
+                          <!-- {{ player.name
+                          }}<span v-if="index != team.players.length - 1"
                             >,</span
-                          >
+                          > -->
+                          <span
+                            class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                            >{{ player.name }}
+                            <i
+                              v-if="player.id === team.teamLeader.id"
+                              class="ri-copyright-line"
+                              style="color: #e74c3c; vertical-align: middle"
+                            ></i>
+                          </span>
                         </span>
                       </td>
                       <td
@@ -95,277 +108,121 @@
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                          >Points</span
+                          >{{ $tc("point", 1) }}</span
                         >
-                        {{ object.points }}
+                        {{ team.points ? team.points : "N/A" }}
                       </td>
                     </tr>
-
-                    <!-- <tr
-                    class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-                  >
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Position</span
-                      >
-                      <span
-                        class="rounded bg-silver py-1 px-3 text-xs font-bold"
-                        >2</span>
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Team</span
-                      >
-                      German
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Players</span
-                      >
-                      Joe, William, Averell
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Actions</span
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline"
-                        >Edit</a
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline pl-6"
-                        >Remove</a
-                      >
-                    </td>
-                  </tr>
-
-                  <tr
-                    class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-                  >
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Position</span
-                      >
-                      <span
-                        class="rounded bg-bronze py-1 px-3 text-xs font-bold"
-                        >3</span>
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Team</span
-                      >
-                      German
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Players</span
-                      >
-                      Joe, William, Averell
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Actions</span
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline"
-                        >Edit</a
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline pl-6"
-                        >Remove</a
-                      >
-                    </td>
-                  </tr>
-
-                  <tr
-                    class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-                  >
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Position</span
-                      >
-                      <span
-                        class="rounded py-1 px-3 text-xs font-bold"
-                        >4</span>
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Team</span
-                      >
-                      German
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Players</span
-                      >
-                      Joe, William, Averell
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Actions</span
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline"
-                        >Edit</a
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline pl-6"
-                        >Remove</a
-                      >
-                    </td>
-                  </tr>
-
-                  <tr
-                    class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-                  >
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Position</span
-                      >
-                      <span
-                        class="rounded py-1 px-3 text-xs font-bold"
-                        >5</span>
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Team</span
-                      >
-                      German
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Players</span
-                      >
-                      Joe, William, Averell
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Actions</span
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline"
-                        >Edit</a
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline pl-6"
-                        >Remove</a
-                      >
-                    </td>
-                  </tr>
-
-                  <tr
-                    class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-                  >
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Position</span
-                      >
-                      <span
-                        class="rounded py-1 px-3 text-xs font-bold"
-                        >6</span>
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Team</span
-                      >
-                      German
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Players</span
-                      >
-                      Joe, William, Averell
-                    </td>
-                    <td
-                      class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
-                    >
-                      <span
-                        class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                        >Actions</span
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline"
-                        >Edit</a
-                      >
-                      <a
-                        href="#"
-                        class="text-blue-400 hover:text-blue-600 underline pl-6"
-                        >Remove</a
-                      >
-                    </td>
-                  </tr> -->
                   </tbody>
                 </table>
               </div>
+              <!-- <div
+                class="max-w-7xl mx-auto sm:px-6 lg:px-8"
+                v-if="tournament.teams.length > 0"
+              >
+                <h2 class="text-xl font-bold text-gray-900 text-left my-4">
+                  Classement des joueurs
+                </h2>
+                <table
+                  class="border-collapse w-full mb-4"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+                      >
+                        {{ $tc("position", 1) }}
+                      </th>
+                      <th
+                        class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+                      >
+                        {{ $tc("player", 1) }}
+                      </th>
+                      <th
+                        class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+                      >
+                        {{ $tc("team", 1) }}
+                      </th>
+                      <th
+                        class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
+                      >
+                        {{ $tc("kill", 2) }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="player in allPlayers"
+                      v-bind:key="player.id"
+                      class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
+                    >
+                      <td
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
+                      >
+                        <span
+                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase font-bold"
+                          >{{ $tc("position", 1) }}</span
+                        >
+                        <span
+                          v-bind:class="[
+                            player.position == 1
+                              ? 'rounded bg-gold py-1 px-3 text-md font-bold'
+                              : player.position == 2
+                              ? 'rounded bg-silver py-1 px-3 text-md font-bold'
+                              : player.position == 3
+                              ? 'rounded bg-bronze py-1 px-3 text-md font-bold'
+                              : 'rounded py-1 px-3 text-md font-bold',
+                          ]"
+                          >{{
+                            player.placement ? player.placement : "N/A"
+                          }}</span
+                        >
+                      </td>
+                      <td
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                      >
+                        <span
+                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
+                          >{{ $tc("team", 1) }}</span
+                        >
+                        {{ player.name }}
+                      </td>
+                      <td
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        style="vertical-align: middle"
+                      >
+                        <span
+                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
+                          >{{ $tc("player", 1) }}</span
+                        >
+                        {{ player.team }}
+                      </td>
+                      <td
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                      >
+                        <span
+                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
+                          >{{ $tc("point", 1) }}</span
+                        >
+                        {{ player.points ? player.points : "N/A" }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div> -->
+              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="tournament.teams.length === 0">
+                <div >
+                  <p>{{ $t("msgNoTeamInTournament") }}</p>
+                  <router-link
+                    to="/"
+                    class="underline"
+                    style="margin-top: 30px"
+                    >{{ $t("msgBackToTournamentsList") }}</router-link
+                  >
+                </div>
+              </div>
             </div>
           </div>
-          <!-- /End replace -->
         </div>
       </main>
     </div>
@@ -373,61 +230,34 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import LayoutDefault from "../layouts/LayoutDefault.vue";
 
 export default {
-  name: "Home",
+  name: "Table",
   components: {
     LayoutDefault,
   },
+  beforeMount() {
+    this.apiFindTournaments({
+      filter: { id: this.$route.params.id },
+    }).then((data) => {
+      this.tournament = data.findTournaments[0];
+      data.findTournaments[0].teams.flat().forEach((team) => {
+        team.players.flat().forEach((player) => {
+          var playerToPush = { name: player.name, team: team.name }
+          this.allPlayers.push(playerToPush);
+        });
+      });
+    });
+  },
+  methods: {
+    ...mapActions(["apiFindTournaments"]),
+  },
   data() {
     return {
-      teams: [
-        {
-          name: "Les Camas",
-          position: 1,
-          members: [{ name: "Joe" }, { name: "Averell" }, { name: "Will" }],
-          points: 120,
-        },
-        {
-          name: "T-Cube",
-          position: 2,
-          members: [
-            { name: "AlbinoMamba" },
-            { name: "Th2ib" },
-            { name: "Cavalon" },
-          ],
-          points: 98,
-        },
-        {
-          name: "Les sous-doués",
-          position: 3,
-          members: [{ name: "Babaturco" }, { name: "Robin" }, { name: "Nico" }],
-          points: 51,
-        },
-        {
-          name: "French Bukkake",
-          position: 4,
-          members: [{ name: "Laurent" }, { name: "Allan" }, { name: "Loic" }],
-          points: 49,
-        },
-        {
-          name: "WAP",
-          position: 5,
-          members: [{ name: "Kilby" }, { name: "Le N" }, { name: "Jason" }],
-          points: 40,
-        },
-        {
-          name: "Les Tarlouzes en folie",
-          position: 6,
-          members: [
-            { name: "Jonathan" },
-            { name: "Dylan" },
-            { name: "Frederic" },
-          ],
-          points: 15,
-        },
-      ],
+      allPlayers: [],
+      tournament: {},
     };
   },
 };

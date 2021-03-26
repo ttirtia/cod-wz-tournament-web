@@ -9,6 +9,8 @@ import { onLogout, onLogin, apolloClient } from "@/vue-apollo";
 import { LOGIN_USER } from "@/graphql/mutations";
 import jwt_decode from "jwt-decode";
 import createPersistedState from "vuex-persistedstate";
+import VueI18n from 'vue-i18n';
+import 'remixicon/fonts/remixicon.css'
 
 import Table from "./components/Table.vue";
 import Home from "./components/Tournaments.vue";
@@ -41,12 +43,13 @@ import {
   DELETE_USER,
   UPDATE_USER,
   CREATE_INVITATION,
-  DELETE_INVITATION,
+  DELETE_INVITATION
 } from "./graphql/mutations";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookies);
+Vue.use(VueI18n);
 
 Vue.config.productionTip = false;
 
@@ -410,9 +413,19 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+import { languages, defaultLocale } from './locales/index.js'
+const messages = Object.assign(languages)
+
+const i18n = new VueI18n({
+  locale: defaultLocale,
+  fallbackLocale: 'fr',
+  messages
+})
+
 new Vue({
   apolloProvider: createProvider(),
   router,
   render: (h) => h(App),
   store,
+  i18n
 }).$mount("#app");

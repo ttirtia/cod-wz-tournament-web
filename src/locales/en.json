@@ -1,0 +1,17 @@
+{
+    "tournament": "tournament | tournaments",
+    "result": "result | results",
+    "setting": "setting | settings",
+    "signOut": "sign out",
+    "administration": "administration",
+    "openUserMenu": "open user menu",
+    "openMainMenu": "open main menu",
+    "participatingTeam": "no participating teams | 1 participating team | {count} participating teams",
+    "position": "position | positions",
+    "team": "team | teams",
+    "player": "player | players",
+    "point": "point | points",
+    "kill": "kill | kills",
+    "msgNoTeamInTournament": "There is currently no team in this tournament",
+    "msgBackToTournamentsList": "back to tournaments list"
+}

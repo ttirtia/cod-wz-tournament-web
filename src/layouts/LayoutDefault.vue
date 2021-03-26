@@ -11,7 +11,7 @@
               aria-controls="mobile-menu"
               aria-expanded="false"
             >
-              <span class="sr-only">Open main menu</span>
+              <span class="sr-only capitalize">{{ $t("openMainMenu") }}</span>
               <!--
             Icon when menu is closed.
 
@@ -76,19 +76,19 @@
                   href="/"
                   v-bind:class="[
                     currentRouteName == 'home'
-                      ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium',
+                      ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize',
                   ]"
-                  >Tournaments</a
+                  >{{ $tc("tournament", 2) }}</a
                 >
                 <a
                   href="/results"
                   v-bind:class="[
                     currentRouteName == 'results'
-                      ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium',
+                      ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize',
                   ]"
-                  >Results</a
+                  >{{ $tc("result", 2) }}</a
                 >
               </div>
             </div>
@@ -105,6 +105,17 @@
 
             <!-- Profile dropdown -->
             <div class="ml-3 relative">
+              <a
+                v-for="(lang, i) in filteredLang"
+                :key="`Lang${i}`"
+                :value="lang"
+                href="#"
+                v-on:click="changeLang(lang)"
+                class="text-gray-400 text-lg lg:text-xs uppercase"
+                >{{ lang }}
+              </a>
+            </div>
+            <div class="ml-3 relative">
               <div>
                 <button
                   id="user-menu"
@@ -113,7 +124,9 @@
                   aria-haspopup="true"
                   @click="dropdown = !dropdown"
                 >
-                  <span class="sr-only">Open user menu</span>
+                  <span class="sr-only capitalize">{{
+                    $t("openUserMenu")
+                  }}</span>
 
                   <img
                     v-if="isAuthenticated"
@@ -146,22 +159,28 @@
               >
                 <a
                   href="#"
-                  :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${dropdown ? '' : 'hidden'} rounded-t-md`"
+                  :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 capitalize ${
+                    dropdown ? '' : 'hidden'
+                  } rounded-t-md`"
                   role="menuitem"
-                  >Settings</a
+                  >{{ $tc("setting", 2) }}</a
                 >
                 <a
                   v-if="user.isAdmin"
                   href="/admin"
-                  :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${dropdown ? '' : 'hidden'}`"
-                  >Administration</a
+                  :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 capitalize ${
+                    dropdown ? '' : 'hidden'
+                  }`"
+                  >{{ $t("administration") }}</a
                 >
                 <a
                   v-on:click="logoutUser"
                   href="#"
-                  :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${dropdown ? '' : 'hidden'}`"
+                  :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 capitalize ${
+                    dropdown ? '' : 'hidden'
+                  }`"
                   role="menuitem"
-                  >Sign out</a
+                  >{{ $t("signOut") }}</a
                 >
               </div>
             </div>
@@ -177,19 +196,19 @@
             href="/"
             v-bind:class="[
               currentRouteName == 'home'
-                ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium',
+                ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize'
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize',
             ]"
-            >Tournaments</a
+            >{{ $tc("tournament", 2) }}</a
           >
           <a
             href="/results"
             v-bind:class="[
               currentRouteName == 'results'
-                ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium'
-                : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium',
+                ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize'
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize',
             ]"
-            >Results</a
+            >{{ $tc("result", 2) }}</a
           >
 
           <!-- <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
@@ -215,16 +234,26 @@ export default {
     currentRouteName() {
       return this.$route.name;
     },
+    filteredLang() {
+      return this.langs.filter((lang) => {
+        return lang != this.$i18n.locale;
+      });
+    },
   },
   data() {
     return {
       dropdown: false,
+      langs: ["fr", "en"],
     };
   },
   methods: {
     ...mapActions(["logOut"]),
     logoutUser: function () {
       this.logOut().then(() => this.$router.push("/login").catch(() => {}));
+    },
+    changeLang: function (newLang) {
+      this.$i18n.locale = newLang;
+      this.$cookies.set("language", newLang, new Date(new Date().getTime()+1000*60*60*24*365).toGMTString()); // Expires in 1 year
     },
   },
 };
