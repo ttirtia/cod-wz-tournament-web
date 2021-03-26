@@ -1,0 +1,17 @@
+{
+    "tournament": "tournoi | tournois",
+    "result": "résultat | résultats",
+    "setting": "paramètre | paramètres",
+    "signOut": "se déconnecter",
+    "administration": "administration",
+    "openUserMenu": "ouvrir le menu utilisateur",
+    "openMainMenu": "ouvrir le menu principal",
+    "participatingTeam": "aucune équipe participate | 1 équipe participante | {count} équipes participantes",
+    "position": "position | positions",
+    "team": "équipe | équipes",
+    "player": "joueur | joueurs",
+    "point": "point | points",
+    "kill": "kill | kills",
+    "msgNoTeamInTournament": "Il n'y a acutellement aucune équipe dans ce tournoi",
+    "msgBackToTournamentsList": "retour à la liste des tournois"
+}

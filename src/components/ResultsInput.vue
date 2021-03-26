@@ -4,9 +4,7 @@
       <div class="w-11/12 p-12 bg-white sm:w-8/12 md:w-1/2 lg:w-5/12">
         <h1 class="text-xl font-semibold">
           Hello there 👋,
-          <span class="font-normal"
-            >please fill in your game information</span
-          >
+          <span class="font-normal">please fill in your game information</span>
         </h1>
         <form class="mt-6">
           <div class="flex justify-between gap-3">
@@ -64,6 +62,6 @@ export default {
   name: "Results",
   components: {
     LayoutDefault,
-  }
+  },
 };
 </script>
