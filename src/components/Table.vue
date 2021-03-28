@@ -46,7 +46,7 @@
                   </thead>
                   <tbody>
                     <tr
-                      v-for="team in tournament.teams"
+                      v-for="team in sortedTeams"
                       v-bind:key="team.id"
                       class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
                     >
@@ -259,6 +259,29 @@ export default {
       allPlayers: [],
       tournament: {},
     };
+  },
+  computed: {
+    sortedTeams: function(){
+      function compare(a, b) {
+        if ((a.placement ? a.placement : 1000) < (b.placement ? b.placement : 1000))
+          return -1;
+        if ((a.placement ? a.placement : 1000) > (b.placement ? b.placement : 1000))
+          return 1;
+
+        return 0;
+      }
+
+      var teamsCopy = this.tournament.teams.slice();
+
+      //1. sort teams members to place team leader first. Then alphabetically
+      teamsCopy.forEach(function(element){
+        element.players.sort(function(a){
+          return element.teamLeader == a ? 1 : -1;
+        })
+      });
+
+      return teamsCopy.sort(compare);
+    }
   },
 };
 </script>
