@@ -135,7 +135,7 @@ const store = new Vuex.Store({
       state.authStatus = "";
       state.isAuthenticated = false;
       state.token = "";
-      Vue.$cookies.remove("token", null, HOST_URL.hostname);
+      Vue.$cookies.remove("token", "/", HOST_URL.hostname);
     },
   },
   actions: {
