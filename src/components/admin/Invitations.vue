@@ -142,7 +142,7 @@ export default {
   },
   data() {
     return {
-      hostUrl: process.env.HOST_URL || "http://localhost:8080/",
+      hostUrl: process.env.VUE_APP_HOST_URL || "http://localhost:8080/",
       invitations: [],
       invitation: {
         player: null,

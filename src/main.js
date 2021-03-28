@@ -50,6 +50,8 @@ Vue.use(VueCookies);
 
 Vue.config.productionTip = false;
 
+const HOST_URL = new URL(process.env.VUE_APP_HOST_URL || "http://localhost:8080/");
+
 const routes = [
   { path: "/", component: Home, name: "home", meta: { requiresAuth: true } },
   {
@@ -117,10 +119,10 @@ const store = new Vuex.Store({
       Vue.$cookies.set(
         "token",
         JSON.parse(token),
+        "1d",
         null,
-        null,
-        null,
-        null,
+        HOST_URL.hostname,
+        HOST_URL.protocol === "https:",
         "Strict"
       );
     },
@@ -384,8 +386,9 @@ router.beforeEach((to, from, next) => {
   // Check if the user is logged in
   const isUserLoggedIn = store.getters.isAuthenticated;
   const isUserAdmin = store.getters.user.isAdmin;
+  const tokenExp = new Date(store.getters.user.exp * 1000);
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!isUserLoggedIn) {
+    if (!isUserLoggedIn || new Date() >= tokenExp) {
       store.dispatch("logOut");
       next({
         path: "/login",
