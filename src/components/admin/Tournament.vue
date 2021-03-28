@@ -152,7 +152,7 @@ export default {
       let players = team.players.map(({ id }) => id);
       this.apiCreateTeam({
         name: team.name,
-        teamLeader: players[0],
+        teamLeader: team.teamLeader.id,
         players,
         tournament: this.tournament.id,
       }).then(() => {

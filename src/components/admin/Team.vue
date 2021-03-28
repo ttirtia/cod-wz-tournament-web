@@ -1,10 +1,7 @@
 <template>
   <layout-default>
     <div class="mx-6 mt-8 space-y-6 font-sans">
-      <div
-        v-if="team === null"
-        class="flex flex-grow justify-center pt-12"
-      >
+      <div v-if="team === null" class="flex flex-grow justify-center pt-12">
         <p>This is not the team you're looking for.</p>
       </div>
       <div
@@ -33,6 +30,26 @@
             </svg>
             <p>Add a player</p>
           </button>
+          <button
+            class="flex flex-row items-center space-x-2 border border-gray-400 rounded-md p-2 focus:outline-none"
+            @click="showAddGameModal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p>Add results</p>
+          </button>
         </div>
         <div
           v-if="!team.players.length"
@@ -57,9 +74,44 @@
                     <p class="text-left text-md font-semibold">
                       {{ player.name }}
                     </p>
+                    <svg
+                      v-if="team.teamLeader.id === player.id"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      class="ml-1 mt-1 w-4 h-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                      />
+                    </svg>
                   </div>
                 </div>
                 <div class="flex items-center space-x-4">
+                  <button
+                    v-if="team.teamLeader.id !== player.id"
+                    @click="promoteLeader(player.id)"
+                    class="focus:outline-none"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 10l7-7m0 0l7 7m-7-7v18"
+                      />
+                    </svg>
+                  </button>
                   <button
                     @click="removePlayer(player.id)"
                     class="focus:outline-none"
@@ -232,6 +284,26 @@
                         />
                       </svg>
                     </button>
+                    <button
+                      @click="deleteGame(game.id)"
+                      class="focus:outline-none"
+                      v-if="typeof editedGame.id === 'undefined'"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        class="w-8 h-8"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </button>
                   </div>
                 </div>
                 <div class="mt-4" v-if="expandedGameId === game.id">
@@ -277,6 +349,16 @@
         ref="teamUserAddModal"
         v-bind:teamName="team.name"
       />
+
+      <GameCreationModal
+        v-if="isAddGameModalVisible"
+        v-show="isAddGameModalVisible"
+        @close="closeAddGameModal"
+        @save="saveGame"
+        ref="gameCreationModal"
+        :players="team.players"
+        v-bind:game.sync="editedGame"
+      />
     </div>
   </layout-default>
 </template>
@@ -285,12 +367,14 @@
 import { mapActions } from "vuex";
 import LayoutDefault from "../../layouts/LayoutDefault";
 import TeamUserAddModal from "./modal/TeamUserAddModal";
+import GameCreationModal from "./modal/GameCreationModal";
 
 export default {
   name: "AdminTeam",
   components: {
     LayoutDefault,
     TeamUserAddModal,
+    GameCreationModal,
   },
   data() {
     return {
@@ -298,6 +382,7 @@ export default {
       expandedGameId: null,
       editedGame: {},
       isAddPlayerModalVisible: false,
+      isAddGameModalVisible: false,
       redrawSwitch: false,
     };
   },
@@ -307,7 +392,13 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["apiFindTeams", "apiUpdateTeam", "apiUpdateGame"]),
+    ...mapActions([
+      "apiFindTeams",
+      "apiUpdateTeam",
+      "apiCreateGame",
+      "apiUpdateGame",
+      "apiDeleteGame",
+    ]),
     expandGame: function (gameId) {
       this.expandedGameId = this.expandedGameId === gameId ? null : gameId;
     },
@@ -344,6 +435,16 @@ export default {
         });
       });
     },
+    promoteLeader: function (playerId) {
+      this.apiUpdateTeam({
+        id: this.team.id,
+        team: { teamLeader: playerId },
+      }).then(() => {
+        this.apiFindTeams({ id: this.team.id }).then((data) => {
+          this.team = data.findTeams[0];
+        });
+      });
+    },
     editGame: function (game) {
       this.expandedGameId = game.id;
       this.editedGame.id = game.id;
@@ -359,20 +460,43 @@ export default {
     saveGame: function () {
       let results = [];
       for (let index in this.editedGame.results) {
-        results.push({ player: index, kills: this.editedGame.results[index]*1 });
+        results.push({
+          player: index,
+          kills: this.editedGame.results[index] * 1,
+        });
       }
 
-      this.apiUpdateGame({
-        id: this.editedGame.id,
-        game: { placement: this.editedGame.placement*1, results },
-      }).then(() => {
+      if (typeof this.editedGame.id !== "undefined") {
+        this.apiUpdateGame({
+          id: this.editedGame.id,
+          game: { placement: this.editedGame.placement * 1, results },
+        }).then(() => {
+          this.apiFindTeams({ id: this.team.id }).then((data) => {
+            this.team = data.findTeams[0];
+          });
+        });
+      } else {
+        this.apiCreateGame({
+          team: this.team.id,
+          placement: this.editedGame.placement * 1,
+          results,
+        }).then(() => {
+          this.apiFindTeams({ id: this.team.id }).then((data) => {
+            this.team = data.findTeams[0];
+          });
+        });
+      }
+
+      this.editedGame.id = null;
+      this.editedGame = {};
+      this.isAddGameModalVisible = false;
+    },
+    deleteGame: function (gameId) {
+      this.apiDeleteGame(gameId).then(() => {
         this.apiFindTeams({ id: this.team.id }).then((data) => {
           this.team = data.findTeams[0];
         });
       });
-
-      this.editedGame.id = null;
-      this.editedGame = {};
     },
     closeGameEdit: function () {
       this.editedGame.id = null;
@@ -383,6 +507,12 @@ export default {
     },
     closeAddPlayerModal: function () {
       this.isAddPlayerModalVisible = false;
+    },
+    showAddGameModal: function () {
+      this.isAddGameModalVisible = true;
+    },
+    closeAddGameModal: function () {
+      this.isAddGameModalVisible = false;
     },
   },
 };

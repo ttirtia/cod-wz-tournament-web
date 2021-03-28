@@ -12,25 +12,25 @@
         </p>
         <div class="flex flex-col pt-2 px-2">
           <button
-            @click="$router.push('/admin/players'); view = 'players'"
+            @click="goTo('players')"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Players
           </button>
           <button
-            @click="$router.push('/admin/tournaments'); view = 'tournaments'"
+            @click="goTo('tournaments')"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Tournaments
           </button>
           <button
-            @click="$router.push('/admin/users'); view = 'users'"
+            @click="goTo('users')"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Users
           </button>
           <button
-            @click="$router.push('/admin/invitations'); view = 'invitations'"
+            @click="goTo('invitations')"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Invitations
@@ -82,6 +82,13 @@ export default {
   },
   computed: {
     ...mapGetters(["isAuthenticated", "user"]),
+  },
+  methods: {
+    goTo: function (section) {
+      if (this.view === section) return;
+      this.$router.push("/admin/" + section);
+      this.view = section;
+    },
   },
 };
 </script>

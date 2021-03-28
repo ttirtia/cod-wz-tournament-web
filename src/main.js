@@ -18,7 +18,13 @@ import Register from "./components/Register.vue";
 import Administration from "./components/Administration.vue";
 import AdminTournament from "./components/admin/Tournament.vue";
 import AdminTeam from "./components/admin/Team.vue";
-import { FIND_PLAYERS, FIND_TOURNAMENTS, FIND_TEAMS, FIND_USERS, FIND_INVITATIONS } from "./graphql/queries";
+import {
+  FIND_PLAYERS,
+  FIND_TOURNAMENTS,
+  FIND_TEAMS,
+  FIND_USERS,
+  FIND_INVITATIONS,
+} from "./graphql/queries";
 import {
   CREATE_PLAYER,
   DELETE_PLAYER,
@@ -28,7 +34,9 @@ import {
   CREATE_TEAM,
   UPDATE_TEAM,
   DELETE_TEAM,
+  CREATE_GAME,
   UPDATE_GAME,
+  DELETE_GAME,
   CREATE_USER,
   DELETE_USER,
   UPDATE_USER,
@@ -234,12 +242,32 @@ const store = new Vuex.Store({
 
       return data;
     },
+    async apiCreateGame(_, game) {
+      const { data } = await apolloClient.mutate({
+        mutation: CREATE_GAME,
+        variables: {
+          game,
+        },
+      });
+
+      return data;
+    },
     async apiUpdateGame(_, { id, game }) {
       const { data } = await apolloClient.mutate({
         mutation: UPDATE_GAME,
         variables: {
           id,
           game,
+        },
+      });
+
+      return data;
+    },
+    async apiDeleteGame(_, gameId) {
+      const { data } = await apolloClient.mutate({
+        mutation: DELETE_GAME,
+        variables: {
+          id: gameId,
         },
       });
 

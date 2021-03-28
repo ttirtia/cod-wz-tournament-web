@@ -115,6 +115,7 @@ export default {
   components: {
     DatePicker,
   },
+  props: ["tournament"],
   data() {
     return {
       lang: {
@@ -123,6 +124,7 @@ export default {
         },
         monthBeforeYear: false,
       },
+      editedTournamentId: null,
       newTournamentInfo: {
         startDate: new Date(),
         endDate: new Date(),
@@ -131,13 +133,20 @@ export default {
       },
     };
   },
+  beforeMount() {
+    if(typeof this.tournament.id !== "undefined") {
+      this.editedTournamentId = this.tournament.id;
+      this.newTournamentInfo = {
+        name: this.tournament.name,
+        startDate: new Date(this.tournament.startDate),
+        endDate: new Date(this.tournament.endDate),
+        gameLimit: this.tournament.gameLimit,
+        isOpen: this.tournament.isOpen,
+      };
+    }
+  },
   methods: {
     close() {
-      this.newTournamentInfo = {
-        startDate: new Date(),
-        endDate: new Date(),
-        isOpen: true,
-      };
       this.$emit("close");
     },
     save() {
