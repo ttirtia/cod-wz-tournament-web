@@ -100,10 +100,24 @@ export const DELETE_TEAM = gql`
   }
 `;
 
+export const CREATE_GAME = gql`
+  mutation createGame($game: CreateGameInput!) {
+    createGame(game: $game) {
+      id
+    }
+  }
+`;
+
 export const UPDATE_GAME = gql`
   mutation updateGame($id: ID!, $game: UpdateGameInput!) {
     updateGame(id: $id, game: $game) {
       id
     }
+  }
+`;
+
+export const DELETE_GAME = gql`
+  mutation deleteGame($id: ID!) {
+    deleteGame(id: $id)
   }
 `;
