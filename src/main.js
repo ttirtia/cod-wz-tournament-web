@@ -43,7 +43,7 @@ import {
   DELETE_USER,
   UPDATE_USER,
   CREATE_INVITATION,
-  DELETE_INVITATION
+  DELETE_INVITATION,
 } from "./graphql/mutations";
 
 Vue.use(VueRouter);
@@ -380,7 +380,7 @@ const store = new Vuex.Store({
       });
 
       return data;
-    },
+    }
   },
 });
 
