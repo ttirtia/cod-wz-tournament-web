@@ -274,9 +274,9 @@ export default {
       var teamsCopy = this.tournament.teams.slice();
 
       //1. sort teams members to place team leader first. Then alphabetically
-      teamsCopy.forEach(function(element){
-        element.players.sort(function(a){
-          return element.teamLeader == a ? 1 : -1;
+      teamsCopy.forEach(function(team){
+        team.players.sort(function(a){
+           return team.teamLeader.id === a.id ? -1 : 1;
         })
       });
 
