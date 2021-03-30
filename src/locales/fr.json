@@ -1,8 +1,10 @@
 {
 	"administration": "administration",
 	"kill": "kill | kills",
+  "killsRequired": "nombre de kills requis pour {player}",
 	"msgBackToTournamentsList": "retour à la liste des tournois",
 	"msgCorrectTheFollowingError": "veuillez corriger l'erreur suivante | veuillez corriger les erreurs suivantes",
+  "msgGameLimitReached": "la limite de parties a été atteinte pour le tournoi en cours",
 	"msgNoTeamInTournament": "Il n'y a acutellement aucune équipe dans ce tournoi",
 	"msgResultsInput": "veuillez entrer les résultats de votre partie.",
 	"openMainMenu": "ouvrir le menu principal",
@@ -12,11 +14,13 @@
 	"player": "joueur | joueurs",
 	"point": "point | points",
 	"position": "position | positions",
+  "previousGames": "partie précédente | parties précédentes",
 	"result": "résultat | résultats",
 	"resultsinput": "encodage des résultats",
 	"send": "envoyer",
 	"setting": "paramètre | paramètres",
 	"signOut": "se déconnecter",
+  "submit": "soumettre",
 	"team": "équipe | équipes",
 	"tournament": "tournoi | tournois"
 }

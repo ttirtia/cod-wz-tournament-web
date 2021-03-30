@@ -1,8 +1,10 @@
 {
 	"administration": "administration",
 	"kill": "kill | kills",
+  "killsRequired": "kills number required for {player}",
 	"msgBackToTournamentsList": "back to tournaments list",
 	"msgCorrectTheFollowingError": "please, correct the following error | please, correct the following errors",
+  "msgGameLimitReached": "the game limit has been reched for the current tournament",
 	"msgNoTeamInTournament": "There is currently no team in this tournament",
 	"msgResultsInput": "please, fill in the results of your game.",
 	"openMainMenu": "open main menu",
@@ -12,11 +14,13 @@
 	"player": "player | players",
 	"point": "point | points",
 	"position": "placement | placements",
+  "previousGames": "previous game | previous games",
 	"result": "result | results",
 	"resultsinput": "results input",
 	"send": "send",
 	"setting": "setting | settings",
 	"signOut": "sign out",
+  "submit": "submit",
 	"team": "team | teams",
 	"tournament": "tournament | tournaments"
 }

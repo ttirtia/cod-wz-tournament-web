@@ -69,16 +69,42 @@ export const FIND_TEAMS = gql`
 `;
 
 export const FIND_USERS = gql`
-  query {
-    findUsers {
+  query findUsers($filter:UserFilter){
+  findUsers (filter: $filter) {
       id
-      username
-      isAdmin
-      player {
+    	username
+    	isAdmin
+  		player {
+        id
         name
+        teams {
+          id
+          name
+          tournament{
+            id
+            name
+            gameLimit
+          }
+          players {
+            id
+            name
+          },
+          games {
+            id
+            placement
+            points
+            results{
+              kills
+              player{
+                id
+                name
+              }
+            }
+          }
+        }
       }
     }
-  }
+}
 `;
 
 export const FIND_INVITATIONS = gql`

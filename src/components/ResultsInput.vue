@@ -13,19 +13,22 @@
           <div class="md:col-span-1">
             <div class="px-4 sm:px-0">
               <h3 class="text-lg font-medium leading-6 text-gray-900 text-left">
-                {{ this.teamName }}
+                {{ team.name }}
               </h3>
               <p class="mt-1 text-sm text-gray-600 text-left capitalize-first">
                 {{ $t("msgResultsInput") }}
               </p>
             </div>
           </div>
-          <div class="mt-5 md:mt-0 md:col-span-2">
-            <form
-              action="#"
-              method="POST"
-              @submit.prevent="checkForm"
-            >
+          <div
+            class="mt-5 md:mt-0 md:col-span-2"
+            v-if="
+              tournament.gameLimit == -1 ||
+              (tournament.gameLimit != -1 &&
+                team.games.length < tournament.gameLimit)
+            "
+          >
+            <form action="#" method="POST" @submit.prevent="checkForm">
               <!-- <p class="capitalize-first" v-if="errors.length">
                 <b>{{ $tc("msgCorrectTheFollowingError", errors.length) }}:</b>
                 <ul>
@@ -41,7 +44,11 @@
                   {{ $tc("msgCorrectTheFollowingError", errors.length) }}
                 </p>
                 <ul>
-                  <li v-for="error in errors" v-bind:key="error">
+                  <li
+                    v-for="error in errors"
+                    v-bind:key="error"
+                    class="capitalize-first"
+                  >
                     {{ error }}
                   </li>
                 </ul>
@@ -78,6 +85,7 @@
                       <input
                         type="number"
                         v-model.number="result.kills"
+                        :placeholder="[[translations.kills]]"
                         min="0"
                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -89,11 +97,96 @@
                     type="submit"
                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 capitalize"
                   >
-                    {{ $t("send") }}
+                    {{ $t("submit") }}
                   </button>
                 </div>
               </div>
             </form>
+          </div>
+          <div
+            class="mt-5 md:mt-0 md:col-span-2"
+            v-if="
+              tournament.gameLimit != -1 &&
+              team.games.length >= tournament.gameLimit
+            "
+          >
+            <div
+              class="bg-gray-100 border-l-4 border-gray-500 text-gray-700 p-4 mb-4 text-left"
+              role="alert"
+            >
+              <p class="font-bold capitalize-first">
+                {{ $t("msgGameLimitReached") }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hidden sm:block" aria-hidden="true">
+          <div class="py-5">
+            <div class="border-t border-gray-200"></div>
+          </div>
+        </div>
+
+        <div class="md:grid md:grid-cols-3 md:gap-6">
+          <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+              <h3
+                class="text-lg font-medium leading-6 text-gray-900 text-left capitalize-first"
+              >
+                {{ $tc("previousGames", this.team.games.length) }}
+              </h3>
+              <!-- <p class="mt-1 text-sm text-gray-600 text-left capitalize-first">
+                {{ $t("msgResultsInput") }}
+              </p> -->
+            </div>
+          </div>
+
+          <div class="mt-5 md:mt-0 md:col-span-2 mb-5">
+            <div class="shadow overflow-hidden sm:rounded-md text-left">
+              <div class="border rounded border-gray-200 bg-white">
+                <ul class="rounded divide-y divide-gray-200">
+                  <li
+                    v-for="game in this.team.games"
+                    v-bind:key="game.id"
+                    class="flex flex-col p-6 py-4"
+                  >
+                    <div
+                      class="flex items-start flex-col md:flex-row md:space-x-4 grid-rows-1 md:grid-rows-3"
+                    >
+                      <div>
+                        <span
+                          class="text-left text-md font-semibold capitalize-first px-3 py-1"
+                        >
+                          {{ $tc("position", 1) }}:
+                          <span class="font-normal">{{ game.placement }}</span>
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          class="text-left text-md font-semibold capitalize-first px-3 py-1"
+                        >
+                          {{ $tc("point", 2) }}:
+                          <span class="font-normal">{{ game.points }}</span>
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          v-for="result in game.results"
+                          v-bind:key="result.id"
+                          class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2"
+                        >
+                          {{ result.player.name }}:
+                          <span class="font-normal"
+                            >{{ result.kills }}
+                            {{ $tc("kill", result.kills) }}</span
+                          >
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -111,28 +204,34 @@ export default {
     LayoutDefault,
   },
   beforeMount() {
-    this.apiFindTeams({ id: "a60dcce2-b958-491a-8843-9c86972421b4" }).then(
-      (data) => {
-        this.teamName = data.findTeams[0].name;
-        this.game.team = data.findTeams[0].id;
-        data.findTeams[0].players.forEach((player) => {
-          this.game.results.push({
-            kills: 0,
-            player: player.id,
-            playerName: player.name,
-          });
+    this.apiFindUsers({ id: this.$store.getters.user.id }).then((data) => {
+      this.team = data.findUsers[0].player.teams[0];
+      this.game.team = data.findUsers[0].player.teams[0].id;
+      this.tournament = data.findUsers[0].player.teams[0].tournament;
+      this.team.players.forEach((player) => {
+        this.game.results.push({
+          kills: null,
+          player: player.id,
+          playerName: player.name,
         });
-      }
-    );
+      });
+    });
   },
   methods: {
-    ...mapActions(["apiFindTeams", "apiCreateGame"]),
+    ...mapActions(["apiFindUsers", "apiCreateGame"]),
     checkForm: function (e) {
-
       this.errors = [];
 
       if (!this.game.placement) {
         this.errors.push(this.$t("placementRequired"));
+      }
+
+      for (let result of this.game.results) {
+        if (!result.kills) {
+          this.errors.push(
+            this.$t("killsRequired", { player: result.playerName })
+          );
+        }
       }
 
       if (this.errors.length === 0) {
@@ -142,16 +241,22 @@ export default {
       }
     },
     createGame: function () {
-      this.game.results.forEach(function(result){ delete result.playerName });
+      this.game.results.forEach(function (result) {
+        delete result.playerName;
+      });
       this.apiCreateGame(this.game).then(() => {
-        this.$router.push('/');
+        this.$router.push("/table/" + this.tournament.id);
       });
     },
   },
   data() {
     return {
       errors: [],
-      teamName: "",
+      translations: {
+        kills: this.$tc("kill", 2),
+      },
+      team: null,
+      tournament: null,
       game: {
         placement: null,
         team: "",
