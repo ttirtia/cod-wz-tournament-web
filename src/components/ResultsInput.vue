@@ -1,8 +1,8 @@
-<template>
+<template v-if="tournament && team && team.games">
   <layout-default>
     <header class="bg-white shadow">
       <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900 capitalize">
+        <h1 class="text-3xl font-bold text-gray-900 capitalize-first">
           {{ $t("resultsinput") }}
         </h1>
       </div>
@@ -23,18 +23,12 @@
           <div
             class="mt-5 md:mt-0 md:col-span-2"
             v-if="
-              tournament.gameLimit == -1 ||
-              (tournament.gameLimit != -1 &&
+              tournament.gameLimit === -1 ||
+              (tournament.gameLimit !== -1 &&
                 team.games.length < tournament.gameLimit)
             "
           >
             <form action="#" method="POST" @submit.prevent="checkForm">
-              <!-- <p class="capitalize-first" v-if="errors.length">
-                <b>{{ $tc("msgCorrectTheFollowingError", errors.length) }}:</b>
-                <ul>
-                  <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-                </ul>
-              </p> -->
               <div
                 v-if="errors.length"
                 class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 text-left"
@@ -59,7 +53,7 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label
                         for="position"
-                        class="block text-sm font-medium text-gray-700 capitalize"
+                        class="block text-sm font-medium text-gray-700 capitalize-first"
                         >{{ $tc("position", 1) }}</label
                       >
                       <input
@@ -103,13 +97,7 @@
               </div>
             </form>
           </div>
-          <div
-            class="mt-5 md:mt-0 md:col-span-2"
-            v-if="
-              tournament.gameLimit != -1 &&
-              team.games.length >= tournament.gameLimit
-            "
-          >
+          <div class="mt-5 md:mt-0 md:col-span-2" v-else>
             <div
               class="bg-gray-100 border-l-4 border-gray-500 text-gray-700 p-4 mb-4 text-left"
               role="alert"
@@ -133,20 +121,20 @@
               <h3
                 class="text-lg font-medium leading-6 text-gray-900 text-left capitalize-first"
               >
-                {{ $tc("previousGames", this.team.games.length) }}
+                {{ $tc("previousGames", team.games.length) }}
               </h3>
-              <!-- <p class="mt-1 text-sm text-gray-600 text-left capitalize-first">
-                {{ $t("msgResultsInput") }}
-              </p> -->
             </div>
           </div>
 
           <div class="mt-5 md:mt-0 md:col-span-2 mb-5">
-            <div class="shadow overflow-hidden sm:rounded-md text-left">
+            <div
+              v-if="team.games.length > 0"
+              class="shadow overflow-hidden sm:rounded-md text-left"
+            >
               <div class="border rounded border-gray-200 bg-white">
                 <ul class="rounded divide-y divide-gray-200">
                   <li
-                    v-for="game in this.team.games"
+                    v-for="game in team.games"
                     v-bind:key="game.id"
                     class="flex flex-col p-6 py-4"
                   >
@@ -185,6 +173,16 @@
                     </div>
                   </li>
                 </ul>
+              </div>
+            </div>
+            <div class="mt-5 md:mt-0 md:col-span-2" v-else>
+              <div
+                class="bg-gray-100 border-l-4 border-gray-500 text-gray-700 p-4 mb-4 text-left"
+                role="alert"
+              >
+                <p class="font-bold capitalize-first">
+                  {{ $t("msgNoPreviousGames") }}
+                </p>
               </div>
             </div>
           </div>
@@ -255,8 +253,10 @@ export default {
       translations: {
         kills: this.$tc("kill", 2),
       },
-      team: null,
-      tournament: null,
+      team: {
+        games: [],
+      },
+      tournament: {},
       game: {
         placement: null,
         team: "",

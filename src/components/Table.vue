@@ -15,7 +15,7 @@
         >
           <div class="sm:px-0">
             <div class="h-96">
-              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="tournament.teams.length > 0">
+              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="tournament.teams && tournament.teams.length > 0">
                 <h2 class="text-xl font-bold text-gray-900 text-left mb-4">
                   Classement général
                 </h2>
@@ -88,15 +88,11 @@
                           >{{ $tc("player", 1) }}</span
                         >
                         <span v-for="player in team.players" :key="player.id">
-                          <!-- {{ player.name
-                          }}<span v-if="index != team.players.length - 1"
-                            >,</span
-                          > -->
                           <span
                             class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
                             >{{ player.name }}
                             <i
-                              v-if="player.id === team.teamLeader.id"
+                              v-if="player && player.id === team.teamLeader.id"
                               class="ri-copyright-line"
                               style="color: #e74c3c; vertical-align: middle"
                             ></i>
@@ -116,6 +112,7 @@
                   </tbody>
                 </table>
               </div>
+              <!-- WIP : Display players table -->
               <!-- <div
                 class="max-w-7xl mx-auto sm:px-6 lg:px-8"
                 v-if="tournament.teams.length > 0"
@@ -210,7 +207,8 @@
                   </tbody>
                 </table>
               </div> -->
-              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="tournament.teams.length === 0">
+              <!-- WIP : End Display players table -->
+              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-else>
                 <div >
                   <p>{{ $t("msgNoTeamInTournament") }}</p>
                   <router-link
@@ -243,8 +241,8 @@ export default {
       filter: { id: this.$route.params.id },
     }).then((data) => {
       this.tournament = data.findTournaments[0];
-      data.findTournaments[0].teams.flat().forEach((team) => {
-        team.players.flat().forEach((player) => {
+      data.findTournaments[0].teams.forEach((team) => {
+        team.players.forEach((player) => {
           var playerToPush = { name: player.name, team: team.name }
           this.allPlayers.push(playerToPush);
         });
@@ -263,12 +261,7 @@ export default {
   computed: {
     sortedTeams: function(){
       function compare(a, b) {
-        if ((a.placement ? a.placement : 1000) < (b.placement ? b.placement : 1000))
-          return -1;
-        if ((a.placement ? a.placement : 1000) > (b.placement ? b.placement : 1000))
-          return 1;
-
-        return 0;
+        return (a.placement || Number.MAX_SAFE_INTEGER) - (b.placement || Number.MAX_SAFE_INTEGER);
       }
 
       var teamsCopy = this.tournament.teams.slice();
