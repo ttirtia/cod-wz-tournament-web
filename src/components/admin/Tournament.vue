@@ -54,15 +54,12 @@
               >
                 <div class="flex-grow flex-col mr-4">
                   <div class="flex items-center mb-2">
-                    <p v-if="team.placement" class="text-md font-semibold">
-                      {{ team.placement }}.
-                    </p>
-                    <p
-                      @click="$router.push('/admin/teams/' + team.id)"
+                    <router-link
+                      :to="'/admin/teams/' + team.id"
                       class="max-w-max text-left text-md font-semibold cursor-pointer"
                     >
                       {{ team.name }}
-                    </p>
+                    </router-link>
                   </div>
                   <p class="text-left text-sm">
                     Points: {{ team.points || "N/A" }}
@@ -131,7 +128,7 @@ export default {
   beforeMount() {
     this.apiFindTournaments({
       filter: { id: this.$route.params.id },
-      teamOrder: "PLACEMENT_ASC",
+      teamOrder: "NAME_ASC",
     }).then((data) => {
       this.tournament = data.findTournaments[0];
     });

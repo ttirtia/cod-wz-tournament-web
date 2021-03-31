@@ -80,10 +80,14 @@ export const FIND_USERS = gql`
         teams {
           id
           name
+          teamLeader {
+            id
+          }
           tournament{
             id
             name
             gameLimit
+            isOpen
           }
           players {
             id

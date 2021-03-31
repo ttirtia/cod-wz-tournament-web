@@ -8,8 +8,11 @@
       </div>
     </header>
     <div class="grid place-items-center mt-10">
-      <div class="mt-10 sm:mt-0">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
+      <div v-if="!team" class="mx-auto">
+        {{ $tc("msgPlayerNotInTeam") }}
+      </div>
+      <div v-else class="mt-10 sm:mt-0">
+        <div v-if="isTeamLeader" class="md:grid md:grid-cols-3 md:gap-6">
           <div class="md:col-span-1">
             <div class="px-4 sm:px-0">
               <h3 class="text-lg font-medium leading-6 text-gray-900 text-left">
@@ -109,13 +112,14 @@
           </div>
         </div>
 
-        <div class="hidden sm:block" aria-hidden="true">
+        <!-- We hide the separator if the user is not team leader -->
+        <div v-if="isTeamLeader" class="hidden sm:block" aria-hidden="true">
           <div class="py-5">
             <div class="border-t border-gray-200"></div>
           </div>
         </div>
 
-        <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div v-if="team.games" class="md:grid md:grid-cols-3 md:gap-6">
           <div class="md:col-span-1">
             <div class="px-4 sm:px-0">
               <h3
@@ -203,16 +207,25 @@ export default {
   },
   beforeMount() {
     this.apiFindUsers({ id: this.$store.getters.user.id }).then((data) => {
-      this.team = data.findUsers[0].player.teams[0];
-      this.game.team = data.findUsers[0].player.teams[0].id;
-      this.tournament = data.findUsers[0].player.teams[0].tournament;
-      this.team.players.forEach((player) => {
-        this.game.results.push({
-          kills: null,
-          player: player.id,
-          playerName: player.name,
+      // Find the first team in an open tournament
+      // We consider the user is only in one open tournament at a time
+      this.team = data.findUsers[0].player.teams.find(
+        ({ tournament }) => tournament.isOpen
+      );
+
+      if (typeof this.team !== "undefined") {
+        this.isTeamLeader =
+          data.findUsers[0].player.id === this.team.teamLeader.id;
+        this.game.team = this.team.id;
+        this.tournament = this.team.tournament;
+        this.team.players.forEach((player) => {
+          this.game.results.push({
+            kills: null,
+            player: player.id,
+            playerName: player.name,
+          });
         });
-      });
+      }
     });
   },
   methods: {
@@ -250,11 +263,12 @@ export default {
   data() {
     return {
       errors: [],
+      isTeamLeader: null,
       translations: {
         kills: this.$tc("kill", 2),
       },
       team: {
-        games: [],
+        games: null,
       },
       tournament: {},
       game: {

@@ -48,7 +48,8 @@
             </div>
           </div>
 
-          <div class="flex items-center justify-between">
+          <!-- Manage this -->
+          <!--<div class="flex items-center justify-between">
             <div class="flex items-center">
               <input
                 id="remember_me"
@@ -69,7 +70,7 @@
                 Forgot your password?
               </a>
             </div>
-          </div>
+          </div>-->
 
           <div>
             <!-- <button @click="login()" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"> -->
