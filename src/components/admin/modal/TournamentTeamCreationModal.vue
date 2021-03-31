@@ -49,7 +49,7 @@
                 @setPlayer="setPlayer"
                 class="ml-28 absolute"
               />
-              <div class="flex flex-row items-center ml-60 mr-4">
+              <div class="flex flex-row items-center ml-64 mr-4">
                 <input
                   class="mx-1"
                   type="checkbox"

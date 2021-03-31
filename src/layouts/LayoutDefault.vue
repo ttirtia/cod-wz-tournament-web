@@ -11,7 +11,9 @@
               aria-controls="mobile-menu"
               aria-expanded="false"
             >
-              <span class="sr-only capitalize-first">{{ $t("openMainMenu") }}</span>
+              <span class="sr-only capitalize-first">{{
+                $t("openMainMenu")
+              }}</span>
               <!--
             Icon when menu is closed.
 
@@ -70,23 +72,23 @@
             </div>
             <div class="hidden sm:block sm:ml-6">
               <div class="flex space-x-4">
-                <a
-                  href="/"
+                <router-link
+                  to="/"
                   v-bind:class="[
                     currentRouteName == 'home'
                       ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first',
                   ]"
-                  >{{ $tc("tournament", 2) }}</a
+                  >{{ $tc("tournament", 2) }}</router-link
                 >
-                <a
-                  href="/results"
+                <router-link
+                  to="/results"
                   v-bind:class="[
                     currentRouteName == 'results'
                       ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first',
                   ]"
-                  >{{ $tc("result", 2) }}</a
+                  >{{ $tc("result", 2) }}</router-link
                 >
               </div>
             </div>
@@ -156,13 +158,13 @@
                   role="menuitem"
                   >{{ $tc("setting", 2) }}</a
                 >
-                <a
+                <router-link
                   v-if="user.isAdmin"
-                  href="/admin"
+                  to="/admin"
                   :class="`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 capitalize-first ${
                     dropdown ? '' : 'hidden'
                   }`"
-                  >{{ $t("administration") }}</a
+                  >{{ $tc("administration") }}</router-link
                 >
                 <a
                   v-on:click="logoutUser"
@@ -182,26 +184,25 @@
       <!-- Mobile menu, show/hide based on menu state. -->
       <div class="sm:hidden" id="mobile-menu">
         <div class="px-2 pt-2 pb-3 space-y-1">
-          <a
-            href="/"
+          <router-link
+            to="/"
             v-bind:class="[
               currentRouteName == 'home'
                 ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first'
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first',
             ]"
-            >{{ $tc("tournament", 2) }}</a
+            >{{ $tc("tournament", 2) }}</router-link
           >
-          <a
-            href="/results"
+          <router-link
+            to="/results"
             v-bind:class="[
               currentRouteName == 'results'
                 ? 'bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first'
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium capitalize-first',
             ]"
-            >{{ $tc("result", 2) }}</a
+            >{{ $tc("result", 2) }}</router-link
           >
-
-          </div>
+        </div>
       </div>
     </nav>
     <main class="LayoutDefault__main">
@@ -239,9 +240,12 @@ export default {
     },
     changeLang: function (newLang) {
       this.$i18n.locale = newLang;
-      this.$cookies.set("language", newLang, new Date(new Date().getTime()+1000*60*60*24*365).toGMTString()); // Expires in 1 year
+      this.$cookies.set(
+        "language",
+        newLang,
+        new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365).toGMTString()
+      ); // Expires in 1 year
     },
   },
 };
 </script>
-

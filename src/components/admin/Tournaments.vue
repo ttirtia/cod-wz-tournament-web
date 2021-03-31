@@ -41,18 +41,18 @@
               v-bind:key="tournament.id"
               class="flex flex-row items-center justify-start h-20 p-6 py-8"
             >
-              <div class="flex-grow flex-col">
-                <p
-                  @click="$router.push('/admin/tournaments/' + tournament.id)"
-                  class="max-w-max text-left text-md font-semibold cursor-pointer"
+              <div class="flex-grow flex-col text-left">
+                <router-link
+                  :to="'/admin/tournaments/' + tournament.id"
+                  class="max-w-max text-md font-semibold cursor-pointer justify-start"
                 >
                   {{ tournament.name }}
-                </p>
-                <p class="text-left text-sm">
+                </router-link>
+                <p class="text-sm">
                   {{ new Date(tournament.startDate).toLocaleString() }} -
                   {{ new Date(tournament.endDate).toLocaleString() }}
                 </p>
-                <p class="text-left text-sm">
+                <p class="text-sm">
                   Teams: {{ tournament.teams.length }}
                 </p>
               </div>

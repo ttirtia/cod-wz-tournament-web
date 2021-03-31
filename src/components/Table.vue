@@ -54,16 +54,16 @@
                         class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
-                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase font-bold"
+                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
                           >{{ $tc("position", 1) }}</span
                         >
                         <span
                           v-bind:class="[
-                            team.position == 1
+                            team.placement == 1
                               ? 'rounded bg-gold py-1 px-3 text-md font-bold'
-                              : team.position == 2
+                              : team.placement == 2
                               ? 'rounded bg-silver py-1 px-3 text-md font-bold'
-                              : team.position == 3
+                              : team.placement == 3
                               ? 'rounded bg-bronze py-1 px-3 text-md font-bold'
                               : 'rounded py-1 px-3 text-md font-bold',
                           ]"
@@ -71,7 +71,7 @@
                         >
                       </td>
                       <td
-                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
@@ -80,7 +80,7 @@
                         {{ team.name }}
                       </td>
                       <td
-                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                         style="vertical-align: middle"
                       >
                         <span
@@ -100,7 +100,7 @@
                         </span>
                       </td>
                       <td
-                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
@@ -157,7 +157,7 @@
                         class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
-                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase font-bold"
+                          class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
                           >{{ $tc("position", 1) }}</span
                         >
                         <span
@@ -176,7 +176,7 @@
                         >
                       </td>
                       <td
-                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
@@ -185,7 +185,7 @@
                         {{ player.name }}
                       </td>
                       <td
-                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                         style="vertical-align: middle"
                       >
                         <span
@@ -195,7 +195,7 @@
                         {{ player.team }}
                       </td>
                       <td
-                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b text-center block lg:table-cell relative lg:static"
+                        class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
