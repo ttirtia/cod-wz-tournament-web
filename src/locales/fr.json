@@ -7,6 +7,7 @@
   "msgGameLimitReached": "la limite de parties a été atteinte pour le tournoi en cours",
 	"msgNoTeamInTournament": "Il n'y a acutellement aucune équipe dans ce tournoi",
 	"msgResultsInput": "veuillez entrer les résultats de votre partie.",
+  "msgNoPreviousGames": "aucune partie jouée",
 	"openMainMenu": "ouvrir le menu principal",
 	"openUserMenu": "ouvrir le menu utilisateur",
 	"participatingTeam": "aucune équipe participate | 1 équipe participante | {count} équipes participantes",

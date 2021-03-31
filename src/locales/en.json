@@ -5,6 +5,7 @@
 	"msgBackToTournamentsList": "back to tournaments list",
 	"msgCorrectTheFollowingError": "please, correct the following error | please, correct the following errors",
   "msgGameLimitReached": "the game limit has been reched for the current tournament",
+  "msgNoPreviousGames": "no previous games",
 	"msgNoTeamInTournament": "There is currently no team in this tournament",
 	"msgResultsInput": "please, fill in the results of your game.",
 	"openMainMenu": "open main menu",

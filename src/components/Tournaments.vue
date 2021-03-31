@@ -1,4 +1,4 @@
-<template>
+<template v-if="tournaments">
   <layout-default>
     <header class="bg-white shadow">
       <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -15,12 +15,11 @@
         v-bind:key="tournament.id"
         class="rounded overflow-hidden shadow-lg"
       >
-        <!-- <img class="w-min" src="https://via.placeholder.com/150" alt="Mountain"> -->
         <a :href="'/table/' + tournament.id">
           <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2">{{ tournament.name }}</div>
             <p class="text-gray-700 text-base mt-8">
-              <!-- {{tournament.description}} -->
+              <!-- keep this space to put tournament description or other information -->
             </p>
             <p class="text-gray-700 text-base font-bold mt-8">
               {{ $tc("participatingTeam", tournament.teams.length) }}
