@@ -9,7 +9,7 @@
   "msgNoTeamInTournament": "There is currently no team in this tournament",
   "msgResultsInput": "please, fill in the results of your game.",
   "msgNoTournament": "Oh uh. Looks like we don't have any tournament yet.",
-  "msgPlayerNotInTeam": "You are not part of a team taking participating in a tournament.",
+  "msgPlayerNotInTeam": "You are not part of a team participating in a tournament.",
   "openMainMenu": "open main menu",
   "openUserMenu": "open user menu",
   "participatingTeam": "no participating teams | 1 participating team | {count} participating teams",
