@@ -99,7 +99,10 @@
                             {{ player.name }}
                           </p>
                           <svg
-                            v-if="teamToAdd.teamLeader.id === player.id"
+                            v-if="
+                              teamToAdd.teamLeader &&
+                              teamToAdd.teamLeader.id === player.id
+                            "
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -174,6 +177,7 @@ export default {
   data() {
     return {
       teamToAdd: {
+        teamLeader: {},
         players: [],
       },
       playerToAdd: null,
