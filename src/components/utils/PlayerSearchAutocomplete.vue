@@ -2,7 +2,7 @@
   <div class="inline-block relative">
     <input
       type="text"
-      @keyup="onChange"
+      @input="onChange"
       v-model="search"
       placeholder="Search for a player..."
       class="w-full border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-md pl-2 py-1 truncate"
