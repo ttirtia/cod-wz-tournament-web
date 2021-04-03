@@ -52,6 +52,7 @@
               v-model="newTournamentInfo.startDate"
               type="datetime"
               :lang="lang"
+              style="width: 100%;"
             />
           </div>
           <div class="flex flex-col mb-4">
@@ -64,6 +65,7 @@
               v-model="newTournamentInfo.endDate"
               type="datetime"
               :lang="lang"
+              style="width: 100%;"
             />
           </div>
           <div class="flex flex-col mb-4">
@@ -73,7 +75,7 @@
             <input
               v-model="newTournamentInfo.gameLimit"
               type="number"
-              class="px-1 rounded border border-gray-300 w-16 text-right focus:outline-none"
+              class="pl-2 pr-1 rounded border border-gray-300 w-16 text-left focus:outline-none"
             />
           </div>
           <div class="flex flex-row items-center mb-8">

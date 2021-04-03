@@ -3,12 +3,12 @@
     <div class="modal-backdrop">
       <div
         class="p-4 bg-white rounded-md border border-gray-200"
-        style="width: 32rem; max-height: 56rem"
+        style="max-height: 56rem"
       >
         <div
           class="flex flex-grow flex-row items-center mx-2 pb-2 mb-4 border-b border-gray-300"
         >
-          <p class="text-lg font-semibold flex-grow text-left truncate">
+          <p class="text-lg font-semibold flex-grow text-left">
             Create a new team
           </p>
           <button @click="close" class="focus:outline-none">
@@ -38,27 +38,17 @@
                 id="teamName"
                 name="teamName"
                 required
-                class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                class="w-full px-3 py-2 border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                 placeholder="Les try-harders"
               />
             </div>
-            <div class="flex flex-row items-center">
-              <label class="text-mdtext-left">Add a player</label>
+            <div class="flex flex-row items-center space-x-2">
+              <label class="text-sm text-left">Add a player</label>
               <PlayerSearchAutocomplete
                 ref="playerSearchAutocomplete"
                 @setPlayer="setPlayer"
-                class="ml-28 absolute"
+                class="w-40 sm:w-auto"
               />
-              <div class="flex flex-row items-center ml-64 mr-4">
-                <input
-                  class="mx-1"
-                  type="checkbox"
-                  v-model="playerToAddIsLeader"
-                />
-                <label for="tournamentEndDate" class="text-sm text-left"
-                  >Leader</label
-                >
-              </div>
               <button @click="addPlayer" class="focus:outline-none">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -76,15 +66,25 @@
                 </svg>
               </button>
             </div>
+            <div class="flex flex-row items-center mr-4 pb-4 border-b border-gray-300">
+              <label for="tournamentEndDate" class="text-sm text-left mr-10"
+                >Leader</label
+              >
+              <input
+                class="mx-1"
+                type="checkbox"
+                v-model="playerToAddIsLeader"
+              />
+            </div>
 
             <div>
-              <p class="text-left text-md mt-6 mb-4">Players</p>
+              <p class="text-left text-md mb-2">Players</p>
               <div v-if="!teamToAdd.players.length" class="flex flex-col">
                 <p class="text-sm">No player in this team</p>
               </div>
               <div
                 v-if="teamToAdd.players.length"
-                class="flex flex-col w-full mt-6 max-h-full"
+                class="flex flex-col w-full max-h-full"
               >
                 <div class="border rounded border-gray-200 bg-white">
                   <ul class="rounded divide-y divide-gray-200">

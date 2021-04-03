@@ -37,7 +37,7 @@
                   </svg>
                 </div>
                 <p v-if="user.player !== null" class="text-left text-sm">
-                  Linked player: {{ user.player.name }}
+                  Player: {{ user.player.name }}
                 </p>
               </div>
               <div class="flex items-center space-x-4">

@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col">
+  <div class="inline-block relative">
     <input
       type="text"
       @input="onChange"
       v-model="search"
       placeholder="Search for a player..."
-      class="border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-md pl-2 py-1"
+      class="w-full border border-gray-300 placeholder-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-md pl-2 py-1 truncate"
     />
     <ul
       v-show="isOpen"
-      class="border border-t-0 border-gray-300 rounded-md bg-white overflow-auto h-28"
+      class="w-full border border-t-0 border-gray-300 rounded-md bg-white overflow-auto h-28 mt-1 z-10 absolute"
     >
       <li class="loading" v-if="isLoading">Loading results...</li>
       <li
@@ -17,7 +17,7 @@
         v-for="player in players"
         :key="player.id"
         @click="setPlayer(player)"
-        class="text-left px-2 py-1.5 hover:bg-gray-200 text-md cursor-pointer"
+        class="text-left px-2 py-1.5 hover:bg-gray-200 text-md cursor-pointer z-auto"
       >
         {{ player.name }}
       </li>

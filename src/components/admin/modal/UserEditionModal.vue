@@ -3,7 +3,6 @@
     <div class="modal-backdrop">
       <div
         class="p-4 h-60 bg-white rounded-md border border-gray-200"
-        style="width: 32rem"
       >
         <div
           class="flex flex-grow flex-row items-center mx-2 pb-2 mb-4 border-b border-gray-300"
@@ -30,18 +29,18 @@
         </div>
 
         <div class="flex flex-col h-full mx-2">
-          <div class="space-y-4 mb-10">
+          <div class="flex flex-col space-y-4 mb-10">
             <div class="flex flex-row items-center">
-              <label for="playerName" class="text-md text-left mr-24"
+              <label for="playerName" class="text-sm text-left mr-14"
                 >Admin</label
               >
-              <input class="ml-1" type="checkbox" v-model="editIsAdmin" />
+              <input type="checkbox" v-model="editIsAdmin" />
             </div>
-            <div class="flex flex-row mb-12">
-              <label for="playerName" class="text-mdtext-left"
+            <div class="flex flex-row mb-12 items-center">
+              <label for="playerName" class="flex flex-shrink-0 text-sm text-left mr-3"
                 >Linked player</label
               >
-              <PlayerSearchAutocomplete ref="playerSearchAutocomplete" :player=player @setPlayer="setPlayer" class="ml-36 absolute" />
+              <PlayerSearchAutocomplete ref="playerSearchAutocomplete" :player=player @setPlayer="setPlayer" />
             </div>
           </div>
           <div class="flex flex-row justify-center space-x-4">

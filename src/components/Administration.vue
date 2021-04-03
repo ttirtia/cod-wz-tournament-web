@@ -1,9 +1,9 @@
 <template>
   <layout-default>
     <div v-if="isAuthenticated && user.isAdmin" class="flex flex-col font-sans">
-      <!-- Sidebar -->
+      <!-- Sidebar - wide -->
       <div
-        class="fixed flex-col h-full border-r-2 border-gray-200 border-opacity-50 bg-white text-left w-56"
+        class="invisible w-0 h-0 sm:visible sm:w-56 sm:fixed flex-col sm:h-full border-r-2 border-gray-200 border-opacity-50 bg-white text-left"
       >
         <p
           class="text-lg font-semibold font-sans px-6 py-4 rounded-sm border-b-2 border-blue-400 border-opacity-50"
@@ -38,8 +38,46 @@
         </div>
       </div>
 
+      <!-- Sidebar - small -->
+      <div class="sm:hidden">
+        <div
+          @click="showAdminMenu"
+          class="flex flex-row items-center justify-center space-x-2 px-6 py-4 rounded-sm border-blue-400 border-opacity-50 cursor-pointer"
+          :class="smAdminMenu ? '' : 'border-b-2'"
+        >
+          <p class="text-lg font-semibold font-sans">Administration</p>
+            <i class="ri-arrow-down-s-line"></i>
+        </div>
+        <div v-if="smAdminMenu" class="flex flex-col py-2 px-2 border-2 border-blue-400 border-opacity-50">
+          <button
+            @click="goTo('players')"
+            class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
+          >
+            Players
+          </button>
+          <button
+            @click="goTo('tournaments')"
+            class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
+          >
+            Tournaments
+          </button>
+          <button
+            @click="goTo('users')"
+            class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
+          >
+            Users
+          </button>
+          <button
+            @click="goTo('invitations')"
+            class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
+          >
+            Invitations
+          </button>
+        </div>
+      </div>
+
       <!-- Content -->
-      <div class="p-8 pl-64">
+      <div class="p-8 sm:pl-64">
         <Players v-if="view === 'players'" />
         <Users v-if="view === 'users'" />
         <Invitations v-if="view === 'invitations'" />
@@ -78,6 +116,7 @@ export default {
       },
       view: this.$route.params.view,
       invitations: [],
+      smAdminMenu: false,
     };
   },
   computed: {
@@ -88,6 +127,10 @@ export default {
       if (this.view === section) return;
       this.$router.push("/admin/" + section);
       this.view = section;
+      this.smAdminMenu = false;
+    },
+    showAdminMenu: function () {
+      this.smAdminMenu = !this.smAdminMenu;
     },
   },
 };
