@@ -1,6 +1,6 @@
 <template>
   <layout-default>
-    <div class="mx-6 mt-8 space-y-6 font-sans">
+    <div class="mx-6 mt-8 font-sans">
       <div v-if="team === null" class="flex flex-grow justify-center pt-12">
         <p>This is not the team you're looking for.</p>
       </div>
@@ -8,7 +8,7 @@
         v-if="team !== null"
         class="flex flex-col flex-grow mx-auto max-w-4xl"
       >
-        <div class="flex flex-grow flex-row w-full text-left space-x-4">
+        <div class="flex flex-grow flex-row w-full items-center text-left space-x-4">
           <p class="flex-grow text-xl font-semibold">{{ team.name }}</p>
           <button
             class="flex flex-row items-center space-x-2 border border-gray-400 rounded-md p-2 focus:outline-none"

@@ -1,6 +1,6 @@
 <template>
   <layout-default>
-    <div class="mx-6 mt-8 space-y-6 font-sans">
+    <div class="mx-6 mt-8 font-sans">
       <div
         v-if="tournament === null"
         class="flex flex-grow justify-center pt-12"

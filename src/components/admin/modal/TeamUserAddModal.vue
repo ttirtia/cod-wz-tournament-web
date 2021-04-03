@@ -29,12 +29,12 @@
         </div>
 
         <div class="flex flex-col h-full mx-2">
-          <div class="space-y-4 mb-10">
-            <div class="flex flex-col mb-4">
-              <label for="playerName" class="text-sm text-left mb-2"
+          <div class="mb-4">
+            <div class="flex flex-col mb-4 space-y-2">
+              <label for="playerName" class="text-sm text-left"
                 >Player</label
               >
-              <PlayerSearchAutocomplete ref="playerSearchAutocomplete" @setPlayer="setPlayer" class="mt-6 absolute" />
+              <PlayerSearchAutocomplete ref="playerSearchAutocomplete" @setPlayer="setPlayer" />
             </div>
           </div>
           <div class="flex flex-row justify-center space-x-4">

@@ -25,19 +25,19 @@
         </div>
 
         <div class="flex flex-col h-full mx-2">
-          <div class="flex flex-row mb-4 space-x-4">
-            <label for="playerName" class="text-md text-left mb-2"
+          <div class="flex flex-row mb-4 space-x-4 items-center">
+            <label for="playerName" class="text-sm text-left mb-2"
               >Placement</label
             >
             <input
               v-model="newGameInfo.placement"
               type="number"
-              class="flex px-1 rounded border border-gray-300 w-20 text-right focus:outline-none"
+              class="flex pl-2 pr-1 rounded border border-gray-300 w-20 focus:outline-none"
             />
           </div>
 
           <div v-if="players.length" class="flex flex-col mb-8">
-            <p class="text-left text-md mb-4">Results</p>
+            <p class="text-left text-sm mb-4">Results</p>
             <div class="border rounded border-gray-200 bg-white">
               <ul class="rounded divide-y divide-gray-200">
                 <li
@@ -45,7 +45,7 @@
                   v-bind:key="player.id"
                   class="flex flex-row items-center h-12 p-6 py-8"
                 >
-                  <div class="flex-grow flex-col mr-4">
+                  <div class="flex-grow flex-col">
                     <div class="flex items-center">
                       <p class="text-left text-md font-semibold flex-grow">
                         {{ player.name }}
@@ -53,8 +53,9 @@
                       <input
                         v-model="newGameInfo.results[player.id]"
                         type="number"
-                        class="flex px-1 rounded border border-gray-300 w-20 text-right focus:outline-none"
+                        class="flex pl-2 pr-1 mr-2 rounded border border-gray-300 w-20 focus:outline-none"
                       />
+                      <p>kills</p>
                     </div>
                   </div>
                 </li>
@@ -96,7 +97,7 @@ export default {
   props: ["game", "players"],
   beforeMount() {
     for (const player of this.players) {
-      this.newGameInfo.results[player.id] = null;
+      this.newGameInfo.results[player.id] = 0;
     }
   },
   methods: {

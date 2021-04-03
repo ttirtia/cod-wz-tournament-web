@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="flex flex-col flex-grow mx-auto max-w-6xl">
-      <div class="flex flex-grow flex-row w-full text-left space-x-4">
+      <div class="flex flex-row text-left space-x-4">
         <p class="flex-grow text-xl font-semibold">Tournaments</p>
         <button
-          class="flex flex-row items-center space-x-2 border border-gray-400 rounded-md p-2 focus:outline-none"
+          class="flex flex-row flex-shrink items-center space-x-2 border border-gray-400 rounded-md p-2 focus:outline-none"
           @click="showCreateTournamentModal"
         >
           <svg
@@ -12,7 +12,7 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            class="w-6 h-6"
+            class="w-6 h-6 flex-shrink-0"
           >
             <path
               stroke-linecap="round"
@@ -21,7 +21,8 @@
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p>Create a tournament</p>
+          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">Create a tournament</p>
+          <p class="sm:hidden">Create</p>
         </button>
       </div>
       <div
@@ -48,9 +49,12 @@
                 >
                   {{ tournament.name }}
                 </router-link>
-                <p class="text-sm">
-                  {{ new Date(tournament.startDate).toLocaleString() }} -
-                  {{ new Date(tournament.endDate).toLocaleString() }}
+                <p class="sm:hidden text-sm mt-2">
+                  {{ DateTime.fromMillis(tournament.startDate).toFormat('dd/MM/yyyy') }}
+                </p>
+                <p class="invisible w-0 h-0 sm:visible sm:w-auto sm:h-auto text-sm sm:mt-2">
+                  {{ DateTime.fromMillis(tournament.startDate).toFormat('dd/MM/yyyy HH:mm:ss') }} -
+                  {{ DateTime.fromMillis(tournament.endDate).toFormat('dd/MM/yyyy HH:mm:ss') }}
                 </p>
                 <p class="text-sm">
                   Teams: {{ tournament.teams.length }}
@@ -115,6 +119,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { DateTime } from "luxon";
 import TournamentEditionModal from "./modal/TournamentEditionModal";
 
 export default {
@@ -124,6 +129,7 @@ export default {
   },
   data() {
     return {
+      DateTime,
       tournaments: [],
       isCreateTournamentModalVisible: false,
       editedTournament: null,
