@@ -12,7 +12,7 @@
   "msgPlayerNotInTeam": "Vous ne faites pas partie d'une équipe participant à un tournoi.",
   "openMainMenu": "ouvrir le menu principal",
   "openUserMenu": "ouvrir le menu utilisateur",
-  "participatingTeam": "aucune équipe participate | 1 équipe participante | {count} équipes participantes",
+  "participatingTeam": "aucune équipe | 1 équipe | {count} équipes",
   "placementRequired": "position requise",
   "player": "joueur | joueurs",
   "point": "point | points",

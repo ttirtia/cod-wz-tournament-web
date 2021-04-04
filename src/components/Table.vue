@@ -2,13 +2,15 @@
 <template>
   <layout-default>
     <div>
-      <header class="bg-white shadow">
+      <div class="grid grid-cols-12 gap-4">
+      <div class="border-b-2 md:col-start-5 lg:col-start-5 xl:col-start-5 md:col-span-4 lg:col-span-4 xl:col-span-4 col-span-10 col-start-2">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 class="text-3xl font-bold text-gray-900">
+          <h1 class="text-3xl font-bold text-gray-900 capitalize-first">
             {{ tournament.name }}
           </h1>
         </div>
-      </header>
+      </div>
+    </div>
       <main>
         <div
           class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"
