@@ -1,12 +1,15 @@
 <template>
   <layout-default>
-    <div v-if="isAuthenticated && user.isAdmin" class="flex flex-col font-sans">
+    <div
+      v-if="isAuthenticated && user.isAdmin"
+      class="font-sans"
+    >
       <!-- Sidebar - wide -->
       <div
-        class="invisible w-0 h-0 sm:visible sm:w-56 sm:fixed flex-col sm:h-full border-r-2 border-gray-200 border-opacity-50 bg-white text-left"
+        class="w-0 h-0 invisible sm:visible sm:w-56 sm:h-auto sm:min-h-full absolute border-r-2 border-gray-200 border-opacity-50 bg-white"
       >
         <p
-          class="text-lg font-semibold font-sans px-6 py-4 rounded-sm border-b-2 border-blue-400 border-opacity-50"
+          class="text-lg font-semibold px-6 py-4 rounded-sm border-b-2 border-blue-400 border-opacity-50"
         >
           Administration
         </p>
@@ -42,13 +45,17 @@
       <div class="sm:hidden">
         <div
           @click="showAdminMenu"
-          class="flex flex-row items-center justify-center space-x-2 px-6 py-4 rounded-sm border-blue-400 border-opacity-50 cursor-pointer"
+          class="flex flex-row bg-white items-center justify-center space-x-2 px-6 py-4 rounded-sm border-blue-400 border-opacity-50 cursor-pointer"
           :class="smAdminMenu ? '' : 'border-b-2'"
         >
           <p class="text-lg font-semibold font-sans">Administration</p>
-            <i class="ri-arrow-down-s-line"></i>
+          <i v-if="smAdminMenu" class="ri-arrow-up-s-line"></i>
+          <i v-else class="ri-arrow-down-s-line"></i>
         </div>
-        <div v-if="smAdminMenu" class="flex flex-col py-2 px-2 border-2 border-blue-400 border-opacity-50">
+        <div
+          v-if="smAdminMenu"
+          class="flex flex-col py-2 px-2 border-2 border-blue-400 border-opacity-50"
+        >
           <button
             @click="goTo('players')"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
