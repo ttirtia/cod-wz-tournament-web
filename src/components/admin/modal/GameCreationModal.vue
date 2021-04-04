@@ -118,6 +118,7 @@ export default {
 
 <style>
 .modal-backdrop {
+  z-index: 10;
   position: fixed;
   top: 0;
   bottom: 0;
