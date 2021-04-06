@@ -2,11 +2,11 @@
   <layout-default>
     <div
       v-if="isAuthenticated && user.isAdmin"
-      class="font-sans"
+      class="font-sans flex flex-col sm:flex-row h-full"
     >
       <!-- Sidebar - wide -->
       <div
-        class="w-0 h-0 invisible sm:visible sm:w-56 sm:h-auto sm:min-h-full absolute border-r-2 border-gray-200 border-opacity-50 bg-white"
+        class="w-0 h-0 invisible sm:visible sm:w-56 sm:h-auto border-r-2 border-gray-200 border-opacity-50 bg-white"
       >
         <p
           class="text-lg font-semibold px-6 py-4 rounded-sm border-b-2 border-blue-400 border-opacity-50"
@@ -84,7 +84,7 @@
       </div>
 
       <!-- Content -->
-      <div class="p-8 sm:pl-64">
+      <div class="p-8 flex-grow">
         <Players v-if="view === 'players'" />
         <Users v-if="view === 'users'" />
         <Invitations v-if="view === 'invitations'" />

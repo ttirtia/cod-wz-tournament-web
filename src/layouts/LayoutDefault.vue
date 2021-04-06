@@ -1,6 +1,6 @@
 <template>
-  <div class="LayoutDefault h-full overflow-hidden">
-    <nav class="bg-gray-800 absolute top-0 w-full z-10">
+  <div class="LayoutDefault flex flex-col h-full">
+    <nav class="bg-gray-800 fixed w-full z-10">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -205,7 +205,7 @@
         </div>
       </div>
     </nav>
-    <main class="LayoutDefault__main absolute top-40 mt-2 sm:mt-0 sm:top-16 bottom-0 w-full overflow-auto">
+    <main class="LayoutDefault__main flex-grow mt-40 sm:mt-16">
       <slot />
     </main>
   </div>
