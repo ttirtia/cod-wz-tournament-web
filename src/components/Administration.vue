@@ -42,7 +42,7 @@
       </div>
 
       <!-- Sidebar - small -->
-      <div class="sm:hidden">
+      <div class="sm:hidden pt-2">
         <div
           @click="showAdminMenu"
           class="flex flex-row bg-white items-center justify-center space-x-2 px-6 py-4 rounded-sm border-blue-400 border-opacity-50 cursor-pointer"
