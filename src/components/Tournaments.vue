@@ -1,7 +1,9 @@
 <template v-if="tournaments">
   <layout-default>
     <div class="grid grid-cols-12 gap-4">
-      <div class="border-b-2 md:col-start-5 lg:col-start-5 xl:col-start-5 md:col-span-4 lg:col-span-4 xl:col-span-4 col-span-10 col-start-2">
+      <div
+        class="border-b-2 md:col-start-5 lg:col-start-5 xl:col-start-5 md:col-span-4 lg:col-span-4 xl:col-span-4 col-span-10 col-start-2"
+      >
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 class="text-3xl font-bold text-gray-900 capitalize-first">
             {{ $tc("tournament", 2) }}
@@ -14,26 +16,26 @@
     </div>
     <div
       v-else-if="tournaments"
-      class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:mx-24 lg:mx-40"
+      class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mx-auto"
     >
       <div
         v-for="(tournament, index) in tournaments"
         v-bind:key="tournament.id"
         :class="tournament.isOpen ? '' : 'bg-gray-200'"
-        class="mx-auto w-full bg-white rounded-xl shadow-md overflow-hidden"
+        class="mx-auto w-full max-w-sm sm:max-w-md bg-white rounded-xl shadow-md overflow-hidden sm:min-w-max"
       >
         <router-link :to="'/table/' + tournament.id" class="">
-          <div class="md:flex sm:flex">
-            <div class="md:flex-shrink-0">
-              <img
-                class="h-48 w-full object-cover md:w-48 sm:w-48 opacity-80"
-                v-bind:src="require(`../assets/war${index + 1}.jpg`)"
-                alt="war image"
-              />
-            </div>
-            <div class="p-5 w-full">
+          <div class="sm:flex">
+            <img
+              class="h-20 sm:h-48 sm:w-44 md:w-36 w-full object-cover opacity-80 sm:flex-shrink-0"
+              v-bind:src="require(`../assets/war${((index + 5) % 5) + 1}.jpg`)"
+              alt="war image"
+            />
+            <div
+              class="flex flex-col flex-grow items-center justify-center space-y-2 py-4"
+            >
               <p
-                class="uppercase tracking-wide text-md text-indigo-500 font-semibold tracking-widest overflow-ellipsis"
+                class="uppercase text-md text-indigo-500 font-semibold tracking-widest overflow-ellipsis"
               >
                 {{ tournament.name }}
                 <i
@@ -42,10 +44,10 @@
                   style="vertical-align: center"
                 />
               </p>
-              <div class="mt-8 sm:mt-5">
+              <div>
                 {{ tournament.startDate | moment("DD/M/yyyy") }}
               </div>
-              <p class="text-gray-500 mt-12 sm:mt-5">
+              <p class="text-gray-500">
                 {{ $tc("participatingTeam", tournament.teams.length) }}
               </p>
             </div>
