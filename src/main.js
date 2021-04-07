@@ -51,13 +51,6 @@ Vue.use(Vuex);
 Vue.use(VueCookies);
 Vue.use(VueI18n);
 
-const moment = require('moment')
-               require('moment/locale/fr')
-
-Vue.use(require('vue-moment'), {
-    moment
-});
-
 Vue.config.productionTip = false;
 
 const HOST_URL = new URL(process.env.VUE_APP_HOST_URL || "http://localhost:8080/");

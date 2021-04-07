@@ -10,7 +10,7 @@
               class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
               aria-expanded="false"
-              @click="menuOpen = !menuOpen"
+              @click="mobileMenuOpen = !mobileMenuOpen"
             >
               <span class="sr-only capitalize-first">{{
                 $t("openMainMenu")
@@ -23,7 +23,7 @@
             Menu open: "hidden", Menu closed: "block"
           -->
               <svg
-                :class="(!menuOpen ? '' : 'hidden') + ' h-6 w-6'"
+                :class="(!mobileMenuOpen ? '' : 'hidden') + ' h-6 w-6'"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -44,7 +44,7 @@
             Menu open: "block", Menu closed: "hidden"
           -->
               <svg
-                :class="(menuOpen ? '' : 'hidden') + ' h-6 w-6'"
+                :class="(mobileMenuOpen ? '' : 'hidden') + ' h-6 w-6'"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -181,7 +181,7 @@
       </div>
 
       <!-- Mobile menu, show/hide based on menu state. -->
-      <div :class="menuOpen ? '' : 'hidden'" id="mobile-menu">
+      <div :class="mobileMenuOpen ? '' : 'hidden'" id="mobile-menu">
         <div class="px-2 pt-2 pb-3 space-y-1">
           <router-link
             to="/"
@@ -204,7 +204,7 @@
         </div>
       </div>
     </nav>
-    <main class="LayoutDefault__main flex-grow mt-40 sm:mt-16">
+    <main class="LayoutDefault__main flex-grow mt-16">
       <slot />
     </main>
   </div>
@@ -230,7 +230,7 @@ export default {
     return {
       dropdown: false,
       langs: ["fr", "en"],
-      menuOpen: false,
+      mobileMenuOpen: false,
     };
   },
   methods: {
@@ -240,7 +240,6 @@ export default {
     },
     changeLang: function (newLang) {
       this.$i18n.locale = newLang;
-      this.$moment.locale(newLang);
       this.$cookies.set(
         "language",
         newLang,
