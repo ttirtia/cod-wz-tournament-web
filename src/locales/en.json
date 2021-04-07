@@ -1,5 +1,6 @@
 {
   "administration": "administration",
+  "game": "game | games",
   "kill": "kill | kills",
   "killsRequired": "kills number required for {player}",
   "msgBackToTournamentsList": "back to tournaments list",
@@ -13,10 +14,10 @@
   "openMainMenu": "open main menu",
   "openUserMenu": "open user menu",
   "participatingTeam": "no teams | 1 team | {count} teams",
+  "placement": "placement | placements",
   "placementRequired": "placement required",
   "player": "player | players",
   "point": "point | points",
-  "position": "placement | placements",
   "previousGames": "previous game | previous games",
   "result": "result | results",
   "resultsinput": "results input",

@@ -1,5 +1,6 @@
 {
   "administration": "administration",
+  "game": "partie | parties",
   "kill": "kill | kills",
   "killsRequired": "nombre de kills requis pour {player}",
   "msgBackToTournamentsList": "retour à la liste des tournois",
@@ -13,10 +14,10 @@
   "openMainMenu": "ouvrir le menu principal",
   "openUserMenu": "ouvrir le menu utilisateur",
   "participatingTeam": "aucune équipe | 1 équipe | {count} équipes",
+  "placement": "position | positions",
   "placementRequired": "position requise",
   "player": "joueur | joueurs",
   "point": "point | points",
-  "position": "position | positions",
   "previousGames": "partie précédente | parties précédentes",
   "result": "résultat | résultats",
   "resultsinput": "encodage des résultats",

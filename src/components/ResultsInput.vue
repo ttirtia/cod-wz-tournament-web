@@ -57,15 +57,15 @@
                   <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
                       <label
-                        for="position"
+                        for="placement"
                         class="block text-sm font-medium text-gray-700 capitalize-first"
-                        >{{ $tc("position", 1) }}</label
+                        >{{ $tc("placement", 1) }}</label
                       >
                       <input
                         type="number"
                         v-model.number="game.placement"
                         min="1"
-                        autocomplete="position"
+                        autocomplete="placement"
                         class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
@@ -151,7 +151,7 @@
                         <span
                           class="text-left text-md font-semibold capitalize-first px-3 py-1"
                         >
-                          {{ $tc("position", 1) }}:
+                          {{ $tc("placement", 1) }}:
                           <span class="font-normal">{{ game.placement }}</span>
                         </span>
                       </div>
