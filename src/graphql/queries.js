@@ -33,6 +33,19 @@ export const FIND_TOURNAMENTS = gql`
         teamLeader {
           id
         }
+        games{
+          id
+          placement
+          results {
+            id
+            kills
+            player{
+              id
+              name
+            }
+
+          }
+        }
       }
     }
   }

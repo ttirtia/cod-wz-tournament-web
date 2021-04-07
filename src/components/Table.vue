@@ -12,12 +12,13 @@
       </div>
     </div>
       <main>
-        <div
-          class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"
-        >
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div class="sm:px-0">
             <div class="h-96">
-              <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-if="tournament.teams && tournament.teams.length > 0">
+              <div
+                class="max-w-7xl mx-auto sm:px-6 lg:px-8"
+                v-if="tournament.teams && tournament.teams.length > 0"
+              >
                 <h2 class="text-xl font-bold text-gray-900 text-left mb-4">
                   Classement général
                 </h2>
@@ -27,7 +28,7 @@
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
                       >
-                        {{ $tc("position", 1) }}
+                        {{ $tc("placement", 1) }}
                       </th>
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
@@ -47,17 +48,16 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <template v-for="team in sortedTeams">
                     <tr
-                      v-for="team in sortedTeams"
-                      v-bind:key="team.id"
-                      class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
+                      class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mt-4 md:mb-10 lg:mb-0" :key="'A' + team.id"
                     >
                       <td
                         class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                          >{{ $tc("position", 1) }}</span
+                          >{{ $tc("placement", 1) }}</span
                         >
                         <span
                           v-bind:class="[
@@ -87,7 +87,7 @@
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                          >{{ $tc("player", 1) }}</span
+                          >{{ $tc("player", 2) }}</span
                         >
                         <span v-for="player in team.players" :key="player.id">
                           <span
@@ -110,7 +110,65 @@
                         >
                         {{ team.points ? team.points : "N/A" }}
                       </td>
+                      <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                        <button
+                          @click="expandTeam(team.id)"
+                          class="focus:outline-none"
+                          v-if="
+                            expandedTeamId !== team.id
+                          "
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            class="w-7 h-7"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          @click="expandTeam(team.id)"
+                          class="focus:outline-none"
+                          v-if="
+                            expandedTeamId === team.id
+                          "
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            class="w-7 h-7"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M5 15l7-7 7 7"
+                            />
+                          </svg>
+                        </button>
+                      </td>
                     </tr>
+                    <tr :key="'B' + team.id" v-if="expandedTeamId === team.id">
+                      <td class="col-span-4 md:p-5" colspan="4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
+                          <div class="bg-white rounded-lg p-3" v-for="(game, index) in team.games" :key="index">
+                            <p class="uppercase font-bold mb-2">{{$tc("game", 1) + " " + (index+1)}}</p>
+                            <p class="capitalize-first">{{$tc("placement", 1) + ": " + game.placement}}</p>
+                            <p class="capitalize-first" v-for="result in game.results" :key="result.id">{{result.player.name + ": " + result.kills + " " + $tc("kill", result.kills)}}</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    </template>
                   </tbody>
                 </table>
               </div>
@@ -130,7 +188,7 @@
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
                       >
-                        {{ $tc("position", 1) }}
+                        {{ $tc("placement", 1) }}
                       </th>
                       <th
                         class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell"
@@ -160,15 +218,15 @@
                       >
                         <span
                           class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase"
-                          >{{ $tc("position", 1) }}</span
+                          >{{ $tc("placement", 1) }}</span
                         >
                         <span
                           v-bind:class="[
-                            player.position == 1
+                            player.placement == 1
                               ? 'rounded bg-gold py-1 px-3 text-md font-bold'
-                              : player.position == 2
+                              : player.placement == 2
                               ? 'rounded bg-silver py-1 px-3 text-md font-bold'
-                              : player.position == 3
+                              : player.placement == 3
                               ? 'rounded bg-bronze py-1 px-3 text-md font-bold'
                               : 'rounded py-1 px-3 text-md font-bold',
                           ]"
@@ -211,7 +269,7 @@
               </div> -->
               <!-- WIP : End Display players table -->
               <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" v-else>
-                <div >
+                <div>
                   <p>{{ $t("msgNoTeamInTournament") }}</p>
                   <router-link
                     to="/"
@@ -245,7 +303,7 @@ export default {
       this.tournament = data.findTournaments[0];
       data.findTournaments[0].teams.forEach((team) => {
         team.players.forEach((player) => {
-          var playerToPush = { name: player.name, team: team.name }
+          var playerToPush = { name: player.name, team: team.name };
           this.allPlayers.push(playerToPush);
         });
       });
@@ -253,30 +311,37 @@ export default {
   },
   methods: {
     ...mapActions(["apiFindTournaments"]),
+    expandTeam: function (teamId) {
+      this.expandedTeamId = this.expandedTeamId === teamId ? null : teamId;
+    },
   },
   data() {
     return {
       allPlayers: [],
       tournament: {},
+      expandedTeamId: null,
     };
   },
   computed: {
-    sortedTeams: function(){
+    sortedTeams: function () {
       function compare(a, b) {
-        return (a.placement || Number.MAX_SAFE_INTEGER) - (b.placement || Number.MAX_SAFE_INTEGER);
+        return (
+          (a.placement || Number.MAX_SAFE_INTEGER) -
+          (b.placement || Number.MAX_SAFE_INTEGER)
+        );
       }
 
       var teamsCopy = this.tournament.teams.slice();
 
       //1. sort teams members to place team leader first. Then alphabetically
-      teamsCopy.forEach(function(team){
-        team.players.sort(function(a){
-           return team.teamLeader.id === a.id ? -1 : 1;
-        })
+      teamsCopy.forEach(function (team) {
+        team.players.sort(function (a) {
+          return team.teamLeader.id === a.id ? -1 : 1;
+        });
       });
 
       return teamsCopy.sort(compare);
-    }
+    },
   },
 };
 </script>
