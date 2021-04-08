@@ -160,12 +160,22 @@
                 >
               </div>
             </div>
+            <div
+              v-else
+              class="flex ml-3 text-indigo-500 text-base underline justify-center"
+            >
+              <router-link to="/login">{{ $t("signIn") }}</router-link>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Mobile menu, show/hide based on menu state. -->
-      <div :class="mobileMenuOpen ? '' : 'hidden'" id="mobile-menu">
+      <div
+        class="sm:hidden"
+        :class="mobileMenuOpen ? '' : 'hidden'"
+        id="mobile-menu"
+      >
         <div class="px-2 pt-2 pb-3 space-y-1">
           <router-link
             to="/"
