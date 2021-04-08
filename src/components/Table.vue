@@ -94,7 +94,7 @@
                             class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
                             >{{ player.name }}
                             <i
-                              v-if="player && player.id === team.teamLeader.id"
+                              v-if="player && team.teamLeader && player.id === team.teamLeader.id"
                               class="ri-copyright-line"
                               style="color: #e74c3c; vertical-align: middle"
                             ></i>
