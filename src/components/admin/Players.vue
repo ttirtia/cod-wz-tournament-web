@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <layout-admin>
     <div class="flex flex-col flex-grow mx-auto max-w-6xl">
       <div class="flex flex-grow flex-row w-full text-left space-x-4">
         <p class="flex-grow text-xl font-semibold">Players</p>
@@ -21,11 +21,13 @@
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">Create a player</p>
+          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">
+            Create a player
+          </p>
           <p class="sm:hidden">Create</p>
         </button>
       </div>
-      <div v-if="!players.length" class="flex flex-col w-full mt-4 max-h-full">
+      <div v-if="notFound" class="flex flex-col w-full mt-4 max-h-full">
         <p class="mt-16 flex-grow text-md">No player found</p>
       </div>
       <div v-if="players.length" class="flex flex-col w-full mt-6 max-h-full">
@@ -46,7 +48,7 @@
               </div>
               <button
                 @click="deletePlayer(player.id)"
-                class=" focus:outline-none"
+                class="focus:outline-none"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -76,20 +78,23 @@
       @save="createPlayer"
       ref="playerCreationModal"
     />
-  </div>
+  </layout-admin>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import PlayerCreationModal from "./modal/PlayerCreationModal";
+import LayoutAdmin from "../../layouts/LayoutAdmin.vue";
 
 export default {
   name: "Players",
   components: {
     PlayerCreationModal,
+    LayoutAdmin,
   },
   data() {
     return {
+      notFound: false,
       players: [],
       isCreatePlayerModalVisible: false,
     };
@@ -97,14 +102,11 @@ export default {
   beforeMount() {
     this.apiFindPlayers().then((data) => {
       this.players = data.findPlayers;
+      this.notFound = this.players.length === 0;
     });
   },
   methods: {
-    ...mapActions([
-      "apiFindPlayers",
-      "apiCreatePlayer",
-      "apiDeletePlayer",
-    ]),
+    ...mapActions(["apiFindPlayers", "apiCreatePlayer", "apiDeletePlayer"]),
     createPlayer: function () {
       this.apiCreatePlayer(
         this.$refs.playerCreationModal.newPlayerInfo.name
@@ -113,6 +115,7 @@ export default {
         this.isCreatePlayerModalVisible = false;
         this.apiFindPlayers().then((data) => {
           this.players = data.findPlayers;
+          this.notFound = this.players.length === 0;
         });
       });
     },
@@ -120,6 +123,7 @@ export default {
       this.apiDeletePlayer(playerId).then(() => {
         this.apiFindPlayers().then((data) => {
           this.players = data.findPlayers;
+          this.notFound = this.players.length === 0;
         });
       });
     },

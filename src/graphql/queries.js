@@ -43,6 +43,9 @@ export const FIND_TEAMS = gql`
     findTeams(filter: $filter) {
       id
       name
+      tournament {
+        id
+      }
       teamLeader {
         id
         name

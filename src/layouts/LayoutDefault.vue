@@ -1,5 +1,5 @@
 <template>
-  <div class="LayoutDefault flex flex-col h-full">
+  <div class="LayoutDefault flex flex-col h-full font-sans">
     <nav class="bg-gray-800 fixed w-full z-10">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
@@ -93,54 +93,38 @@
             </div>
           </div>
           <div
-            class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+            class="absolute inset-y-0 right-0 flex items-center justify-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 space-x-4"
           >
             <!-- Profile dropdown -->
-            <div class="ml-3 relative">
-              <a
-                v-for="(lang, i) in filteredLang"
-                :key="`Lang${i}`"
-                :value="lang"
-                href="#"
-                v-on:click="changeLang(lang)"
-                class="text-gray-400 text-lg lg:text-xs uppercase"
-                >{{ lang }}
-              </a>
-            </div>
-            <div class="ml-3 relative">
-              <div>
-                <button
-                  id="user-menu"
-                  class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out"
-                  aria-label="User menu"
-                  aria-haspopup="true"
-                  @click="dropdown = !dropdown"
-                >
-                  <span class="sr-only capitalize-first">{{
-                    $t("openUserMenu")
-                  }}</span>
+            <a
+              v-for="(lang, i) in filteredLang"
+              :key="`Lang${i}`"
+              :value="lang"
+              href="#"
+              v-on:click="changeLang(lang)"
+              class="text-gray-400 text-lg lg:text-xs uppercase"
+              >{{ lang }}
+            </a>
+            <div v-if="isAuthenticated">
+              <button
+                id="user-menu"
+                class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out"
+                aria-label="User menu"
+                aria-haspopup="true"
+                @click="dropdown = !dropdown"
+              >
+                <span class="sr-only capitalize-first">{{
+                  $t("openUserMenu")
+                }}</span>
 
-                  <img
-                    v-if="isAuthenticated"
-                    class="h-8 w-8 rounded-full"
-                    v-bind:src="
-                      'https://ui-avatars.com/api/?name=' + user.username
-                    "
-                    alt=""
-                  />
-                </button>
-              </div>
-
-              <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
+                <img
+                  class="h-8 w-8 rounded-full"
+                  v-bind:src="
+                    'https://ui-avatars.com/api/?name=' + user.username
+                  "
+                  alt=""
+                />
+              </button>
               <div
                 style="background-color: white"
                 :class="`origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg transition ease-${
