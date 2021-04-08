@@ -9,23 +9,26 @@ import { onLogout, onLogin, apolloClient } from "@/vue-apollo";
 import { LOGIN_USER } from "@/graphql/mutations";
 import jwt_decode from "jwt-decode";
 import createPersistedState from "vuex-persistedstate";
-import VueI18n from 'vue-i18n';
-import 'remixicon/fonts/remixicon.css'
+import VueI18n from "vue-i18n";
+import "remixicon/fonts/remixicon.css";
 
 import Table from "./components/Table.vue";
 import Home from "./components/Tournaments.vue";
 import Results from "./components/ResultsInput.vue";
 import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
-import Administration from "./components/Administration.vue";
-import AdminTournament from "./components/admin/Tournament.vue";
-import AdminTeam from "./components/admin/Team.vue";
+import AdminPlayers from "./components/admin/Players";
+import AdminTournaments from "./components/admin/Tournaments";
+import AdminTournament from "./components/admin/Tournament";
+import AdminTeam from "./components/admin/Team";
+import AdminUsers from "./components/admin/Users";
+import AdminInvitations from "./components/admin/Invitations";
 import {
   FIND_PLAYERS,
   FIND_TOURNAMENTS,
   FIND_TEAMS,
   FIND_USERS,
-  FIND_INVITATIONS,
+  FIND_INVITATIONS
 } from "./graphql/queries";
 import {
   CREATE_PLAYER,
@@ -43,7 +46,7 @@ import {
   DELETE_USER,
   UPDATE_USER,
   CREATE_INVITATION,
-  DELETE_INVITATION,
+  DELETE_INVITATION
 } from "./graphql/mutations";
 
 Vue.use(VueRouter);
@@ -53,55 +56,74 @@ Vue.use(VueI18n);
 
 Vue.config.productionTip = false;
 
-const HOST_URL = new URL(process.env.VUE_APP_HOST_URL || "http://localhost:8080/");
+const HOST_URL = new URL(
+  process.env.VUE_APP_HOST_URL || "http://localhost:8080/"
+);
 
 const routes = [
-  { path: "/", component: Home, name: "home", meta: { requiresAuth: true } },
+  { path: "/", component: Home, name: "home" },
   {
     path: "/table/:id",
     props: true,
     component: Table,
-    name: "table",
-    meta: { requiresAuth: true },
+    name: "table"
   },
   {
     path: "/results",
     component: Results,
     name: "results",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true }
   },
   {
     path: "/admin",
     redirect: "/admin/players",
     name: "adminRedirect",
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
-    path: "/admin/:view",
-    component: Administration,
-    name: "admin",
-    meta: { requiresAuth: true, requiresAdmin: true },
+    path: "/admin/players",
+    component: AdminPlayers,
+    name: "adminPlayers",
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: "/admin/tournaments",
+    component: AdminTournaments,
+    name: "adminTournaments",
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: "/admin/tournaments/:id",
     component: AdminTournament,
     name: "adminTournament",
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: "/admin/teams/:id",
     component: AdminTeam,
     name: "adminTeam",
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: "/admin/users",
+    component: AdminUsers,
+    name: "adminUsers",
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: "/admin/invitations",
+    component: AdminInvitations,
+    name: "adminInvitations",
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   { path: "/login", component: Login, name: "login" },
-  { path: "/register", component: Register, name: "register" },
+  { path: "/register", component: Register, name: "register" }
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 const store = new Vuex.Store({

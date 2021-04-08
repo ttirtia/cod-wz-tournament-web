@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <layout-admin>
     <div class="flex flex-col flex-grow mx-auto max-w-6xl">
       <div class="flex flex-grow flex-row w-full text-left space-x-4">
         <p class="flex-grow text-xl font-semibold">Invitations</p>
@@ -21,18 +21,20 @@
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">Create an invitation</p>
+          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">
+            Create an invitation
+          </p>
           <p class="sm:hidden">Create</p>
         </button>
       </div>
       <div
-        v-if="!invitations.length"
+        v-if="notFound"
         class="flex flex-col w-full mt-4 max-h-full"
       >
         <p class="mt-16 flex-grow text-md">No invitation found</p>
       </div>
       <div
-        v-if="invitations.length"
+        v-else-if="invitations.length"
         class="flex flex-col w-full mt-6 max-h-full"
       >
         <div class="border rounded border-gray-200 bg-white">
@@ -129,21 +131,24 @@
       ref="playerCreationModal"
       v-bind.sync="invitation"
     />
-  </div>
+  </layout-admin>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import InvitationCreationModal from "./modal/InvitationCreationModal";
+import LayoutAdmin from "../../layouts/LayoutAdmin.vue";
 
 export default {
   name: "Invitations",
   components: {
     InvitationCreationModal,
+    LayoutAdmin,
   },
   data() {
     return {
       hostUrl: process.env.VUE_APP_HOST_URL || "http://localhost:8080/",
+      notFound: false,
       invitations: [],
       invitation: {
         player: null,
@@ -155,6 +160,7 @@ export default {
   beforeMount() {
     this.apiFindInvitations().then((data) => {
       this.invitations = data.findInvitations;
+      this.notFound = this.invitations.length === 0;
     });
   },
   methods: {
@@ -171,6 +177,7 @@ export default {
         this.isCreateInvitationModalVisible = false;
         this.apiFindInvitations().then((data) => {
           this.invitations = data.findInvitations;
+          this.notFound = this.invitations.length === 0;
         });
       });
     },
@@ -178,6 +185,7 @@ export default {
       this.apiDeleteInvitation(invitationId).then(() => {
         this.apiFindInvitations().then((data) => {
           this.invitations = data.findInvitations;
+          this.notFound = this.invitations.length === 0;
         });
       });
     },

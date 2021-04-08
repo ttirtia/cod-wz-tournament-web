@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <layout-admin>
     <div class="flex flex-col flex-grow mx-auto max-w-6xl">
       <div class="flex flex-row text-left space-x-4">
         <p class="flex-grow text-xl font-semibold">Tournaments</p>
@@ -21,18 +21,20 @@
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">Create a tournament</p>
+          <p class="invisible w-0 h-0 sm:visible sm:w-full sm:h-full">
+            Create a tournament
+          </p>
           <p class="sm:hidden">Create</p>
         </button>
       </div>
       <div
-        v-if="!tournaments.length"
+        v-if="notFound"
         class="flex flex-col w-full mt-4 max-h-full"
       >
         <p class="mt-16 flex-grow text-md">No tournament found</p>
       </div>
       <div
-        v-if="tournaments.length"
+        v-else-if="tournaments.length"
         class="flex flex-col w-full mt-6 max-h-full"
       >
         <div class="border rounded border-gray-200 bg-white">
@@ -40,7 +42,7 @@
             <li
               v-for="tournament in tournaments"
               v-bind:key="tournament.id"
-              class="flex flex-row items-center justify-start h-20 p-6 py-8"
+              class="flex flex-row items-center justify-start h-20 p-6 py-12"
             >
               <div class="flex-grow flex-col text-left">
                 <router-link
@@ -50,15 +52,28 @@
                   {{ tournament.name }}
                 </router-link>
                 <p class="sm:hidden text-sm mt-2">
-                  {{ DateTime.fromMillis(tournament.startDate).toFormat('dd/MM/yyyy') }}
+                  {{
+                    DateTime.fromMillis(tournament.startDate).toFormat(
+                      "dd/MM/yyyy"
+                    )
+                  }}
                 </p>
-                <p class="invisible w-0 h-0 sm:visible sm:w-auto sm:h-auto text-sm sm:mt-2">
-                  {{ DateTime.fromMillis(tournament.startDate).toFormat('dd/MM/yyyy HH:mm:ss') }} -
-                  {{ DateTime.fromMillis(tournament.endDate).toFormat('dd/MM/yyyy HH:mm:ss') }}
+                <p
+                  class="invisible w-0 h-0 sm:visible sm:w-auto sm:h-auto text-sm sm:mt-2"
+                >
+                  {{
+                    DateTime.fromMillis(tournament.startDate).toFormat(
+                      "dd/MM/yyyy HH:mm:ss"
+                    )
+                  }}
+                  -
+                  {{
+                    DateTime.fromMillis(tournament.endDate).toFormat(
+                      "dd/MM/yyyy HH:mm:ss"
+                    )
+                  }}
                 </p>
-                <p class="text-sm">
-                  Teams: {{ tournament.teams.length }}
-                </p>
+                <p class="text-sm">Teams: {{ tournament.teams.length }}</p>
               </div>
               <div class="flex items-center space-x-4">
                 <button
@@ -114,22 +129,25 @@
       :tournament="editedTournament"
       ref="tournamentEditionModal"
     />
-  </div>
+  </layout-admin>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import { DateTime } from "luxon";
 import TournamentEditionModal from "./modal/TournamentEditionModal";
+import LayoutAdmin from "../../layouts/LayoutAdmin.vue";
 
 export default {
   name: "Tournaments",
   components: {
     TournamentEditionModal,
+    LayoutAdmin,
   },
   data() {
     return {
       DateTime,
+      notFound: false,
       tournaments: [],
       isCreateTournamentModalVisible: false,
       editedTournament: null,
@@ -138,6 +156,7 @@ export default {
   beforeMount() {
     this.apiFindTournaments({}).then((data) => {
       this.tournaments = data.findTournaments;
+      this.notFound = this.tournaments.length === 0;
     });
   },
   methods: {
@@ -156,6 +175,7 @@ export default {
           this.isCreateTournamentModalVisible = false;
           this.apiFindTournaments({}).then((data) => {
             this.tournaments = data.findTournaments;
+            this.notFound = this.tournaments.length === 0;
           });
         });
       } else {
@@ -175,6 +195,7 @@ export default {
       this.apiDeleteTournament(tournamentId).then(() => {
         this.apiFindTournaments({}).then((data) => {
           this.tournaments = data.findTournaments;
+          this.notFound = this.tournaments.length === 0;
         });
       });
     },
