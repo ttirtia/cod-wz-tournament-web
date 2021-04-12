@@ -110,7 +110,18 @@ export default {
     createPlayer: function () {
       this.apiCreatePlayer(
         this.$refs.playerCreationModal.newPlayerInfo.name
-      ).then(() => {
+      ).then((data) => {
+        if (data.createPlayer.id) {
+          this.$notify({
+            group: "success",
+            type: "success",
+            title: this.$t("playerCreated"),
+            text: this.$t("msgPlayerCreated", {
+              player: this.$refs.playerCreationModal.newPlayerInfo.name,
+            }),
+          });
+        }
+
         this.$refs.playerCreationModal.newPlayerInfo = {};
         this.isCreatePlayerModalVisible = false;
         this.apiFindPlayers().then((data) => {
@@ -120,7 +131,19 @@ export default {
       });
     },
     deletePlayer: function (playerId) {
-      this.apiDeletePlayer(playerId).then(() => {
+      this.apiDeletePlayer(playerId).then((data) => {
+        if (data.deletePlayer) {
+          this.$notify({
+            group: "success",
+            type: "success",
+            title: this.$t("playerDeleted"),
+            text: this.$t("msgPlayerDeleted", {
+              player: this.players.filter(function (player) {
+                return player.id === playerId;
+              })[0].name,
+            }),
+          });
+        }
         this.apiFindPlayers().then((data) => {
           this.players = data.findPlayers;
           this.notFound = this.players.length === 0;
