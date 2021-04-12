@@ -6,10 +6,11 @@
   "msgBackToTournamentsList": "back to tournaments list",
   "msgCorrectTheFollowingError": "please, correct the following error | please, correct the following errors",
   "msgGameLimitReached": "the game limit has been reched for the current tournament",
-  "msgPlayerCreated": "\"{player}\" was created successfully",
   "msgNoPreviousGames": "no previous games",
   "msgNoTeamInTournament": "There is currently no team in this tournament",
   "msgNoTournament": "Oh uh. Looks like we don't have any tournament yet.",
+  "msgPlayerCreated": "\"{player}\" was created successfully",
+  "msgPlayerDeleted": "\"{player}\" was deleted successfully.",
   "msgPlayerNotInTeam": "You are not part of a team participating in a tournament.",
   "msgResultsInput": "please, fill in the results of your game.",
   "msgSomethingWentWrong": "Something went  wrong. Please, try again.",
@@ -21,6 +22,7 @@
   "placementRequired": "placement required",
   "player": "player | players",
   "playerCreated": "Player created",
+  "playerDeleted": "Player deleted",
   "point": "point | points",
   "previousGames": "previous game | previous games",
   "result": "result | results",
@@ -31,7 +33,5 @@
   "signOut": "sign out",
   "submit": "submit",
   "team": "team | teams",
-  "tournament": "tournament | tournaments",
-  "playerDeleted": "Player deleted",
-  "msgPlayerDeleted": "\"{player}\" was deleted successfully."
+  "tournament": "tournament | tournaments"
 }
