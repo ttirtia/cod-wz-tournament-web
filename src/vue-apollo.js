@@ -2,6 +2,10 @@ import Vue from "vue";
 import VueApollo from "vue-apollo";
 import { createApolloClient, restartWebsockets } from "vue-cli-plugin-apollo/graphql-client";
 import { setContext } from "apollo-link-context";
+import { onError } from "apollo-link-error"
+
+// Used to translate error messages. Variable is passed to the createProvider function
+var i18n;
 
 // Install the vue plugin
 Vue.use(VueApollo);
@@ -25,6 +29,37 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+
+  //if we're in production, just show generic message without details
+  if (process.env.NODE_ENV === 'production') {
+    Vue.notify({
+          group: "error",
+          title: i18n.t('oops'),
+          text: i18n.t('msgSomethingWentWrong'),
+          type: "error"
+        });
+    return;
+  }
+
+  if (graphQLErrors){
+      graphQLErrors.forEach(function(error) {
+        Vue.notify({
+          group: "error",
+          title: "GraphQl error",
+          text: error.message,
+          type: "error",
+          duration: 10000, // default is 3000
+        });
+      });
+    }
+
+    if (networkError) {
+      // do something with network errors, if we need to
+    }
+
+});
+
 // Config
 const defaultOptions = {
   // You can use `https` for secure connection (recommended in production)
@@ -45,7 +80,7 @@ const defaultOptions = {
   // Override default apollo link
   // note: don't override httpLink here, specify httpLink options in the
   // httpLinkOptions property of defaultOptions.
-  link: authLink,
+  link: authLink.concat(errorLink),
 
   // Override default cache
   // cache: myCache
@@ -67,14 +102,7 @@ export const { apolloClient, wsClient } = createApolloClient({
 apolloClient.wsClient = wsClient;
 
 // Call this in the Vue app file
-export function createProvider(/*options = {}*/) {
-  // // Create apollo client
-  // const { apolloClient, wsClient } = createApolloClient({
-  //   ...defaultOptions,
-  //   ...options,
-  // })
-  // apolloClient.wsClient = wsClient
-
+export function createProvider(_i18n) {
   // Create vue apollo provider
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
@@ -83,15 +111,9 @@ export function createProvider(/*options = {}*/) {
         // fetchPolicy: 'cache-and-network',
       },
     },
-    errorHandler(error) {
-      // eslint-disable-next-line no-console
-      console.log(
-        "%cError",
-        "background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;",
-        error.message
-      );
-    },
   });
+
+  i18n = _i18n;
 
   return apolloProvider;
 }

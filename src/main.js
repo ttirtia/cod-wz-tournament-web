@@ -9,8 +9,9 @@ import { onLogout, onLogin, apolloClient } from "@/vue-apollo";
 import { LOGIN_USER } from "@/graphql/mutations";
 import jwt_decode from "jwt-decode";
 import createPersistedState from "vuex-persistedstate";
-import VueI18n from "vue-i18n";
-import "remixicon/fonts/remixicon.css";
+import VueI18n from 'vue-i18n';
+import 'remixicon/fonts/remixicon.css'
+import Notifications from 'vue-notification'
 
 import Table from "./components/Table.vue";
 import Home from "./components/Tournaments.vue";
@@ -53,6 +54,7 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookies);
 Vue.use(VueI18n);
+Vue.use(Notifications);
 
 Vue.config.productionTip = false;
 
@@ -444,8 +446,20 @@ const i18n = new VueI18n({
   messages
 });
 
+Vue.config.errorHandler = function(err) {
+
+  var errorMessage = process.env.NODE_ENV === 'production' ? i18n.t('msgSomethingWentWrong') : err.toString();
+
+  Vue.notify({
+    group: "error",
+    type: "error",
+    title: i18n.t('oops'),
+    text: errorMessage,
+  });
+}
+
 new Vue({
-  apolloProvider: createProvider(),
+  apolloProvider: createProvider(i18n),
   router,
   render: h => h(App),
   store,
