@@ -1,16 +1,23 @@
 <template>
-  <layout-default>
-    <div class="mx-6 mt-8 font-sans">
+  <layout-admin>
+    <div>
       <div
-        v-if="tournament === null"
+        v-if="notFound"
         class="flex flex-grow justify-center pt-12"
       >
         <p>This is not the tournament you're looking for.</p>
       </div>
       <div
-        v-if="tournament !== null"
-        class="flex flex-col flex-grow mx-auto max-w-4xl"
+        v-else-if="tournament !== null"
+        class="flex flex-col flex-grow mx-auto max-w-6xl"
       >
+        <router-link
+          class="flex w-max text-indigo-500 text-left mb-4"
+          to="/admin/tournaments"
+        >
+          <i class="ri-arrow-left-s-line mt-0.5 mr-2" />
+          back to tournaments list</router-link
+        >
         <div class="flex flex-grow flex-row w-full text-left space-x-4">
           <p class="flex-grow text-xl font-semibold">{{ tournament.name }}</p>
           <button
@@ -104,22 +111,23 @@
         :tournamentId="tournament.id"
       />
     </div>
-  </layout-default>
+  </layout-admin>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-import LayoutDefault from "../../layouts/LayoutDefault";
+import LayoutAdmin from "../../layouts/LayoutAdmin";
 import TournamentTeamCreationModal from "./modal/TournamentTeamCreationModal";
 
 export default {
   name: "AdminTournament",
   components: {
-    LayoutDefault,
+    LayoutAdmin,
     TournamentTeamCreationModal,
   },
   data() {
     return {
+      notFound: false,
       tournament: null,
       newTeam: {},
       isTeamCreationModalVisible: false,
@@ -131,6 +139,7 @@ export default {
       teamOrder: "NAME_ASC",
     }).then((data) => {
       this.tournament = data.findTournaments[0];
+      this.notFound = typeof this.tournament === "undefined";
     });
   },
   methods: {
@@ -149,7 +158,7 @@ export default {
       let players = team.players.map(({ id }) => id);
       this.apiCreateTeam({
         name: team.name,
-        teamLeader: team.teamLeader.id || team.players[0].id,
+        teamLeader: team.teamLeader.id || null,
         players,
         tournament: this.tournament.id,
       }).then(() => {

@@ -2,7 +2,7 @@
   <layout-default>
     <div
       v-if="isAuthenticated && user.isAdmin"
-      class="font-sans flex flex-col sm:flex-row h-full"
+      class="flex flex-col sm:flex-row h-full"
     >
       <!-- Sidebar - wide -->
       <div
@@ -14,82 +14,79 @@
           Administration
         </p>
         <div class="flex flex-col pt-2 px-2">
-          <button
-            @click="goTo('players')"
+          <router-link
+            to="/admin/players"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Players
-          </button>
-          <button
-            @click="goTo('tournaments')"
+          </router-link>
+          <router-link
+            to="/admin/tournaments"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Tournaments
-          </button>
-          <button
-            @click="goTo('users')"
+          </router-link>
+          <router-link
+            to="/admin/users"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Users
-          </button>
-          <button
-            @click="goTo('invitations')"
+          </router-link>
+          <router-link
+            to="/admin/invitations"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Invitations
-          </button>
+          </router-link>
         </div>
       </div>
 
       <!-- Sidebar - small -->
-      <div class="sm:hidden pt-2">
+      <div class="sm:hidden">
         <div
           @click="showAdminMenu"
           class="flex flex-row bg-white items-center justify-center space-x-2 px-6 py-4 rounded-sm border-blue-400 border-opacity-50 cursor-pointer"
           :class="smAdminMenu ? '' : 'border-b-2'"
         >
-          <p class="text-lg font-semibold font-sans">Administration</p>
+          <p class="text-lg font-semibold">Administration</p>
           <i v-if="smAdminMenu" class="ri-arrow-up-s-line"></i>
           <i v-else class="ri-arrow-down-s-line"></i>
         </div>
         <div
           v-if="smAdminMenu"
-          class="flex flex-col py-2 px-2 border-2 border-blue-400 border-opacity-50"
+          class="flex flex-col py-2 px-2 bg-white border-2 border-blue-400 border-opacity-50"
         >
-          <button
-            @click="goTo('players')"
+          <router-link
+            to="/admin/players"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Players
-          </button>
-          <button
-            @click="goTo('tournaments')"
+          </router-link>
+          <router-link
+            to="/admin/tournaments"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Tournaments
-          </button>
-          <button
-            @click="goTo('users')"
+          </router-link>
+          <router-link
+            to="/admin/users"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Users
-          </button>
-          <button
-            @click="goTo('invitations')"
+          </router-link>
+          <router-link
+            to="/admin/invitations"
             class="hover:bg-gray-200 p-4 rounded-md text-left focus:outline-none"
           >
             Invitations
-          </button>
+          </router-link>
         </div>
       </div>
 
       <!-- Content -->
-      <div class="p-8 flex-grow">
-        <Players v-if="view === 'players'" />
-        <Users v-if="view === 'users'" />
-        <Invitations v-if="view === 'invitations'" />
-        <Tournaments v-if="view === 'tournaments'" />
-      </div>
+      <main class="p-8 flex-grow">
+        <slot />
+      </main>
     </div>
 
     <div v-else class="mt-8 space-y-6">
@@ -99,30 +96,15 @@
 </template>
 
 <script>
-import LayoutDefault from "../layouts/LayoutDefault.vue";
-import Players from "./admin/Players";
-import Users from "./admin/Users";
-import Invitations from "./admin/Invitations";
-import Tournaments from "./admin/Tournaments";
+import LayoutDefault from "./LayoutDefault";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Login",
   components: {
     LayoutDefault,
-    Players,
-    Users,
-    Invitations,
-    Tournaments,
   },
   data() {
     return {
-      authInfo: {
-        username: "",
-        password: "",
-      },
-      view: this.$route.params.view,
-      invitations: [],
       smAdminMenu: false,
     };
   },
@@ -130,12 +112,6 @@ export default {
     ...mapGetters(["isAuthenticated", "user"]),
   },
   methods: {
-    goTo: function (section) {
-      if (this.view === section) return;
-      this.$router.push("/admin/" + section);
-      this.view = section;
-      this.smAdminMenu = false;
-    },
     showAdminMenu: function () {
       this.smAdminMenu = !this.smAdminMenu;
     },

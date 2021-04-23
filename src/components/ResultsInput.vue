@@ -217,7 +217,7 @@ export default {
 
       if (typeof this.team !== "undefined") {
         this.isTeamLeader =
-          data.findUsers[0].player.id === this.team.teamLeader.id;
+          this.team.teamLeader && data.findUsers[0].player.id === this.team.teamLeader.id;
         this.game.team = this.team.id;
         this.tournament = this.team.tournament;
         this.team.players.forEach((player) => {
