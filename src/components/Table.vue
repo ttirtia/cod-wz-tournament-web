@@ -50,7 +50,7 @@
                   <tbody>
                     <template v-for="team in sortedTeams">
                     <tr
-                      class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mt-4 md:mb-10 lg:mb-0" :key="'A' + team.id"
+                      class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mt-4" :key="'classification-' + team.id"
                     >
                       <td
                         class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static"
@@ -114,9 +114,6 @@
                         <button
                           @click="expandTeam(team.id)"
                           class="focus:outline-none"
-                          v-if="
-                            expandedTeamId !== team.id
-                          "
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -126,28 +123,14 @@
                             class="w-7 h-7"
                           >
                             <path
+                              v-if="expandedTeamId !== team.id"
                               stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
                               d="M19 9l-7 7-7-7"
                             />
-                          </svg>
-                        </button>
-                        <button
-                          @click="expandTeam(team.id)"
-                          class="focus:outline-none"
-                          v-if="
-                            expandedTeamId === team.id
-                          "
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            class="w-7 h-7"
-                          >
                             <path
+                              v-else
                               stroke-linecap="round"
                               stroke-linejoin="round"
                               stroke-width="2"
@@ -157,9 +140,9 @@
                         </button>
                       </td>
                     </tr>
-                    <tr :key="'B' + team.id" v-if="expandedTeamId === team.id">
+                    <tr :key="'results-' + team.id" v-if="expandedTeamId === team.id">
                       <td class="col-span-4 md:p-5" colspan="4">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
                           <div class="bg-white rounded-lg p-3" v-for="(game, index) in team.games" :key="index">
                             <p class="uppercase font-bold mb-2">{{$tc("game", 1) + " " + (index+1)}}</p>
                             <p class="capitalize-first">{{$tc("placement", 1) + ": " + game.placement}}</p>
