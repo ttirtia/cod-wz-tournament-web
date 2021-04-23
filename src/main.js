@@ -9,9 +9,9 @@ import { onLogout, onLogin, apolloClient } from "@/vue-apollo";
 import { LOGIN_USER } from "@/graphql/mutations";
 import jwt_decode from "jwt-decode";
 import createPersistedState from "vuex-persistedstate";
-import VueI18n from 'vue-i18n';
-import 'remixicon/fonts/remixicon.css'
-import Notifications from 'vue-notification'
+import VueI18n from "vue-i18n";
+import "remixicon/fonts/remixicon.css";
+import Notifications from "vue-notification";
 
 import Table from "./components/Table.vue";
 import Home from "./components/Tournaments.vue";
