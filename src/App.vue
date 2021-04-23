@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="flex-grow">
     <router-view />
-    <notifications group="error" position="top right" class="mt-20 md:mr-5"/>
-    <notifications group="success" position="top right" class="mt-20 md:mr-5"/>
-    <notifications group="warn" position="top right" class="mt-20 md:mr-5"/>
+    <notifications group="error" position="top right" width="350px" class="mt-20 md:mr-5"/>
+    <notifications group="success" position="top right" width="350px" class="mt-20 md:mr-5"/>
+    <notifications group="warn" position="top right" width="350px" class="mt-20 md:mr-5"/>
   </div>
 </template>
 
